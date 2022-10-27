@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-15:28:17" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-16:14:56" content="结构化的源文件" DTDVersion="41"></fileHeader>
 	<contentHeader name="项目" version="0.0.129" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<program>
 		<identProgram name="modbus_communication" type="section" task="FAST"></identProgram>
@@ -50,8 +50,8 @@
                        first_object := 8501,
                        object_number := 2,
                        motor_status := local_control.powder_screw_status, 
-                       motor_start := auto_control.powder_screw_auto_start, 
-                       motor_Hz_setting := auto_control.powder_screw_auto_start, 
+                       motor_start := powder_screw_start, 
+                       motor_Hz_setting := auto_control.powder_motor_Hz_auto_setting, 
                        motor_data_read := powder_screw_data_read, 
                        malfunction_reset := local_control.powder_screw_malfunction_reset, 
                        activity =&gt; powder_screw_write_status.activity,
@@ -62,6 +62,7 @@
 else
     Modbus_communication_index := 0;
 end_case;
+
 </STSource>
 	</program>
 	<dataBlock>
@@ -70,6 +71,10 @@ end_case;
 		<variables name="pump_1_drive" typeName="motor_data_read"></variables>
 		<variables name="pump_1_drive_write" typeName="motor_data_write"></variables>
 		<variables name="Modbus_communication_index" typeName="INT"></variables>
+		<variables name="powder_screw_start" typeName="EBOOL">
+			<comment>"溶药机螺杆启停"</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
 		<variables name="powder_screw_read_status" typeName="modbus_connect_brief"></variables>
 		<variables name="pump_1_read_status" typeName="modbus_connect_brief"></variables>
 		<variables name="powder_screw_data_write" typeName="modbus_data_write"></variables>
