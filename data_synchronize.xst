@@ -34,6 +34,10 @@ local_control.stirrer_3_status := stirrer_3_status;
 remote_control.powder_screw_status := local_control.powder_screw_status;
 remote_control.powder_screw_maintain := local_control.powder_screw_maintain;
 remote_control.powder_screw_malfunction := local_control.powder_screw_malfunction;
+if local_control.powder_screw_malfunction = 0 then
+    local_control.powder_screw_malfunction_reset := 0;
+    remote_control.powder_screw_malfunction_reset := 0;
+end_if;
 
 (*进水流量*)
 remote_control.water_in_flow := local_control.water_in_flow;
@@ -95,7 +99,17 @@ remote_control.pump_1_status := local_control.pump_1_status;
 remote_control.pump_2_status := local_control.pump_2_status;
 remote_control.metering_pump_1_running_Hz := local_control.metering_pump_1_running_Hz;
 remote_control.metering_pump_2_running_Hz := local_control.metering_pump_2_running_Hz;
-
+(*计量泵故障复位*)
+remote_control.pump_1_malfunction := local_control.pump_1_malfunction;
+if local_control.pump_1_malfunction = 0 then
+    local_control.pump_1_malfunction_reset := 0;
+    remote_control.pump_1_malfunction_reset := 0;
+end_if;
+remote_control.pump_2_malfunction := local_control.pump_2_malfunction;
+if local_control.pump_2_malfunction = 0 then
+    local_control.pump_2_malfunction_reset := 0;
+    remote_control.pump_2_malfunction_reset := 0;
+end_if;
 
 
 (*搅拌机参数同步*)

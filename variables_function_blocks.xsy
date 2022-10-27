@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-12:52:25" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.123" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-14:19:31" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.126" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<dataBlock>
 		<variables name="scale_int_to_real_1" typeName="scale_int_to_real"></variables>
 		<variables name="local_control" typeName="system_parameter">
@@ -241,6 +241,8 @@
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="water_in_valve_control" typeName="scale_real_to_int"></variables>
+		<variables name="water_in_valve_reply" typeName="scale_int_to_real"></variables>
+		<variables name="scale_real_to_int_1" typeName="scale_real_to_int"></variables>
 	</dataBlock>
 	<FBSource nameOfFBType="scale_int_to_real" version="0.01" dateTime="dt#2022-09-30-17:00:55">
 		<attribute name="TypeCodeCheckSumString" value="FA28"></attribute>
@@ -295,7 +297,7 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 		</FBProgram>
 	</FBSource>
 	<DDTSource DDTName="system_parameter" version="0.04" dateTime="dt#2022-10-18-11:19:39">
-		<attribute name="TypeSignatureCheckSumString" value="A95D"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="9941"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
@@ -380,6 +382,15 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 			</variables>
 			<variables name="pump_2_rinsing" typeName="BOOL">
 				<comment>2#计量泵反冲洗</comment>
+			</variables>
+			<variables name="powder_screw_malfunction_reset" typeName="BOOL">
+				<comment>溶药机螺杆故障复位</comment>
+			</variables>
+			<variables name="pump_1_malfunction_reset" typeName="BOOL">
+				<comment>1#计量泵故障复位</comment>
+			</variables>
+			<variables name="pump_2_malfunction_reset" typeName="BOOL">
+				<comment>2#计量泵故障复位</comment>
 			</variables>
 			<variables name="chemical_supply_valve_1_manual" typeName="BOOL">
 				<comment>1#供药电动阀手动控制 1:关闭/0:打开</comment>

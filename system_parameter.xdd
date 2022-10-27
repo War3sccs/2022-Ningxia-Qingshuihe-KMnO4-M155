@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-25-11:26:22" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.67" dateTime="date_and_time#2022-10-24-17:9:48"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-14:8:23" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.125" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<DDTSource DDTName="system_parameter" version="0.04" dateTime="dt#2022-10-18-11:19:39">
 		<attribute name="TypeSignatureCheckSumString" value="A95D"></attribute>
 		<structure>
@@ -88,6 +88,15 @@
 			</variables>
 			<variables name="pump_2_rinsing" typeName="BOOL">
 				<comment>2#计量泵反冲洗</comment>
+			</variables>
+			<variables name="powder_screw_malfunction_reset" typeName="BOOL">
+				<comment>溶药机螺杆故障复位</comment>
+			</variables>
+			<variables name="pump_1_malfunction_reset" typeName="BOOL">
+				<comment>1#计量泵故障复位</comment>
+			</variables>
+			<variables name="pump_2_malfunction_reset" typeName="BOOL">
+				<comment>2#计量泵故障复位</comment>
 			</variables>
 			<variables name="chemical_supply_valve_1_manual" typeName="BOOL">
 				<comment>1#供药电动阀手动控制 1:关闭/0:打开</comment>

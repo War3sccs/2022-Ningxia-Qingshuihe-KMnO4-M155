@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-26-17:17:55" content="功能块源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.119" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
-	<FBSource nameOfFBType="motor_data_write" version="0.02" dateTime="dt#2022-10-26-16:30:43">
-		<attribute name="TypeCodeCheckSumString"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="BD4F"></attribute>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-15:29:27" content="功能块源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.129" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<FBSource nameOfFBType="motor_data_write" version="0.05" dateTime="dt#2022-10-27-15:16:38">
+		<attribute name="TypeCodeCheckSumString" value="F499"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="FED7"></attribute>
 		<inputParameters>
 			<variables name="device_address" typeName="STRING">
 				<attribute name="PositionPin" value="1"></attribute>
@@ -17,6 +17,9 @@
 			</variables>
 			<variables name="motor_start" typeName="BOOL">
 				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="malfunction_reset" typeName="BOOL">
+				<attribute name="PositionPin" value="11"></attribute>
 			</variables>
 			<variables name="motor_status" typeName="BOOL">
 				<attribute name="PositionPin" value="4"></attribute>
@@ -53,7 +56,7 @@
 			<variables name="write_status" typeName="modbus_status"></variables>
 		</privateLocalVariables>
 		<FBProgram name="modbus_write">
-            <STSource>
+			<STSource>
 setting_Hz_real := motor_Hz_setting * 10.0;
 if motor_start = 1 then
     if motor_status = 1 then
@@ -89,16 +92,21 @@ else
         data_write[0] := 16#0002;
     end_if;
 end_if;
+(*故障复位*)
+if malfunction_reset = 1 then
+    (*malfunction_reset *)
+    data_write[0] := 16#0080;
+end_if;
 address_in_transform := ADDM (IN := device_address);
 (* Time out duration setting*)
-motor_status[2] := 50;
-if motor_status[0].0 = 0 then
+write_status[2] := 50;
+if write_status[0].0 = 0 then
     WRITE_VAR (ADR := address_in_transform,
     OBJ := '%MW',
     NUM := 8501,
     NB := 2,
     EMIS := data_write,
-    GEST := motor_status);
+    GEST := write_status);
 end_if;
 
 (*通信状态*)
@@ -107,7 +115,8 @@ cancel := write_status[0].1;
 connect_report := write_status[1];
 (*轮询*)
 communication_index := communication_index + 1;
-            </STSource>
+            
+</STSource>
 		</FBProgram>
 	</FBSource>
 	<DDTSource DDTName="modbus_data_read" version="0.01" dateTime="dt#2022-10-24-17:08:21">
