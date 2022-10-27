@@ -42,6 +42,9 @@ end_if;
 (*进水流量*)
 remote_control.water_in_flow := local_control.water_in_flow;
 
+(*进水压力*)
+remote_control.pressure_in := local_control.pressure_in;
+
 (*运行频率*)
 remote_control.powder_screw_running_Hz := local_control.powder_screw_running_Hz;
 
