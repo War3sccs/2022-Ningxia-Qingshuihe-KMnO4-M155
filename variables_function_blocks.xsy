@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-14:19:31" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.126" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-17:38:15" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.132" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<dataBlock>
 		<variables name="scale_int_to_real_1" typeName="scale_int_to_real"></variables>
 		<variables name="local_control" typeName="system_parameter">
@@ -243,6 +243,13 @@
 		<variables name="water_in_valve_control" typeName="scale_real_to_int"></variables>
 		<variables name="water_in_valve_reply" typeName="scale_int_to_real"></variables>
 		<variables name="scale_real_to_int_1" typeName="scale_real_to_int"></variables>
+		<variables name="water_flow_source" typeName="DINT" topologicalAddress="%ID0.1.0.2">
+			<comment>进水水量原始值</comment>
+		</variables>
+		<variables name="KMnO4_flow_source" typeName="DINT" topologicalAddress="%ID0.1.1.2">
+			<comment>高锰酸钾投加流量原始值</comment>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
 	</dataBlock>
 	<FBSource nameOfFBType="scale_int_to_real" version="0.01" dateTime="dt#2022-09-30-17:00:55">
 		<attribute name="TypeCodeCheckSumString" value="FA28"></attribute>
@@ -864,9 +871,9 @@ communication_index := communication_index + 1;
 		<attribute name="TypeSignatureCheckSumString" value="0C55"></attribute>
 		<array>ARRAY[0..3] OF INT</array>
 	</DDTSource>
-	<FBSource nameOfFBType="motor_data_write" version="0.04" dateTime="dt#2022-10-26-17:21:29">
-		<attribute name="TypeCodeCheckSumString" value="3919"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="F82A"></attribute>
+	<FBSource nameOfFBType="motor_data_write" version="0.05" dateTime="dt#2022-10-27-15:16:38">
+		<attribute name="TypeCodeCheckSumString" value="F499"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="FED7"></attribute>
 		<inputParameters>
 			<variables name="device_address" typeName="STRING">
 				<attribute name="PositionPin" value="1"></attribute>
@@ -879,6 +886,9 @@ communication_index := communication_index + 1;
 			</variables>
 			<variables name="motor_start" typeName="BOOL">
 				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="malfunction_reset" typeName="BOOL">
+				<attribute name="PositionPin" value="11"></attribute>
 			</variables>
 			<variables name="motor_status" typeName="BOOL">
 				<attribute name="PositionPin" value="4"></attribute>
@@ -950,6 +960,11 @@ else
         (*停止*)
         data_write[0] := 16#0002;
     end_if;
+end_if;
+(*故障复位*)
+if malfunction_reset = 1 then
+    (*malfunction_reset *)
+    data_write[0] := 16#0080;
 end_if;
 address_in_transform := ADDM (IN := device_address);
 (* Time out duration setting*)
