@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-18-13:27:41" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.34" dateTime="date_and_time#2022-10-18-11:35:13"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-13:27:17" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.125" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<program>
 		<identProgram name="data_synchronize" type="SR" task="MAST"></identProgram>
 		<STSource>(*参数传递*)
@@ -41,6 +41,16 @@ remote_control.water_in_flow := local_control.water_in_flow;
 (*运行频率*)
 remote_control.powder_screw_running_Hz := local_control.powder_screw_running_Hz;
 
+(*进水电动阀*)
+water_in_valve_reply(
+    input_value := water_in_valve_position_source,
+    input_min := 0,
+    input_max := 10000,
+    output_min := 0.0,
+    output_max := 100.0,
+    output_value =&gt; local_control.water_input_valve_position); 
+remote_control.water_input_valve_position := local_control.water_input_valve_position;
+
 (*按控制方式切换。上位机:1/在地:0*)
 if control_switch = 0 then
     (*溶药机手/自切换*)
@@ -57,6 +67,8 @@ if control_switch = 0 then
     (*料斗加热器/振荡器*)
     remote_control.powder_heater_manual_start := local_control.powder_heater_manual_start;
     remote_control.powder_heater_manual_start := local_control.vibrator_manual_start;
+    (*进水电动阀*)
+    remote_control.waterin_valve_manual_setting := local_control.waterin_valve_manual_setting;
 else
     (*溶药机手/自切换*)
     local_control.solution_prepare_control_method := remote_control.solution_prepare_control_method;
@@ -72,6 +84,8 @@ else
     (*料斗加热器/振荡器*)
     local_control.powder_heater_manual_start := remote_control.powder_heater_manual_start;
     local_control.powder_heater_manual_start := remote_control.vibrator_manual_start;
+    (*进水电动阀*)
+    local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
 end_if;
 
 
@@ -118,11 +132,33 @@ remote_control.rinsing_valve_1_shutting := local_control.rinsing_valve_1_shuttin
 remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shutting;
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
+
 </STSource>
 	</program>
 	<dataBlock>
 		<variables name="rinsing_valve_1_shut" typeName="EBOOL" topologicalAddress="%I0.2.10">
 			<comment>1#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="rinsing_valve_1_open" typeName="EBOOL" topologicalAddress="%I0.2.11">
+			<comment>1#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="water_in_valve_position_source" typeName="INT" topologicalAddress="%IW0.3.0.0">
+			<comment>溶药机进水电动阀4-20mA原始值-输入</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="rinsing_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.12">
+			<comment>2#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="stirrer_1_status" typeName="EBOOL" topologicalAddress="%I0.2.2">
+			<comment>1#搅拌机 1:运行/0:停止</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="rinsing_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.13">
+			<comment>2#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="remote_control" typeName="system_parameter">
@@ -132,33 +168,8 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<comment>1#供药电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="emergency_stop" typeName="EBOOL" topologicalAddress="%I0.2.1">
-			<comment>紧急停机 0:停机 1:正常开机</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
-		</variables>
-		<variables name="chemical_supply_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.8">
-			<comment>2#供药电动阀 关到位 1:到位/0:未到位</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="rinsing_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.13">
-			<comment>2#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="rinsing_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.12">
-			<comment>2#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="local_control" typeName="system_parameter">
-			<comment>在地控制参数</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="rinsing_valve_1_open" typeName="EBOOL" topologicalAddress="%I0.2.11">
-			<comment>1#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="control_switch" typeName="EBOOL" topologicalAddress="%I0.2.0">
-			<comment>控制选择:远程/在地 0:在地 1:远程</comment>
+		<variables name="stirrer_3_status" typeName="EBOOL" topologicalAddress="%I0.2.5">
+			<comment>3#搅拌机 1:运行/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
@@ -166,8 +177,32 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<comment>1#供药电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="emergency_stop" typeName="EBOOL" topologicalAddress="%I0.2.1">
+			<comment>紧急停机 0:停机 1:正常开机</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="stirrer_2_status" typeName="EBOOL" topologicalAddress="%I0.2.4">
+			<comment>2#搅拌机 1:运行/0:停止</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="control_switch" typeName="EBOOL" topologicalAddress="%I0.2.0">
+			<comment>控制选择:远程/在地 0:在地 1:远程</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="water_in_valve_reply" typeName="scale_int_to_real"></variables>
 		<variables name="chemical_supply_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.9">
 			<comment>2#供药电动阀 开到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="chemical_supply_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.8">
+			<comment>2#供药电动阀 关到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="local_control" typeName="system_parameter">
+			<comment>在地控制参数</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 	</dataBlock>
@@ -506,4 +541,56 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			</variables>
 		</structure>
 	</DDTSource>
+	<FBSource nameOfFBType="scale_int_to_real" version="0.01" dateTime="dt#2022-09-30-17:00:55">
+		<attribute name="TypeCodeCheckSumString" value="FA28"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="5604"></attribute>
+		<inputParameters>
+			<variables name="input_value" typeName="INT">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+			<variables name="input_min" typeName="INT">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+			<variables name="input_max" typeName="INT">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="output_min" typeName="REAL">
+				<attribute name="PositionPin" value="4"></attribute>
+			</variables>
+			<variables name="output_max" typeName="REAL">
+				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+		</inputParameters>
+		<outputParameters>
+			<variables name="output_value" typeName="REAL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</outputParameters>
+		<privateLocalVariables>
+			<variables name="temp_int" typeName="INT"></variables>
+			<variables name="temp_real" typeName="REAL"></variables>
+			<variables name="temp_min" typeName="REAL"></variables>
+			<variables name="temp_max" typeName="REAL"></variables>
+		</privateLocalVariables>
+		<FBProgram name="convert_int_real">
+			<STSource>
+(* 限定范围 *)
+if input_value &lt; input_min then 
+temp_int := input_min;
+elsif input_value &gt; input_max then
+temp_int := input_max;
+else
+temp_int := input_value;
+end_if;
+
+(* 整型转浮点 *)
+temp_real := INT_TO_REAL (IN := temp_int);
+temp_min := INT_TO_REAL (IN := input_min);
+temp_max := INT_TO_REAL (IN := input_max);
+
+(* 转换 *)
+output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_min) + output_min;
+</STSource>
+		</FBProgram>
+	</FBSource>
 </STExchangeFile>
