@@ -45,6 +45,12 @@ remote_control.water_in_flow := local_control.water_in_flow;
 (*进水压力*)
 remote_control.pressure_in := local_control.pressure_in;
 
+(*料斗物位计:物位过高/过低*)
+local_control.powder_level_low := powder_level_low_status;
+remote_control.powder_level_low := powder_level_low_status;
+local_control.powder_level_high := powder_level_high_status;
+remote_control.powder_level_high := powder_level_high_status;
+
 (*运行频率*)
 remote_control.powder_screw_running_Hz := local_control.powder_screw_running_Hz;
 

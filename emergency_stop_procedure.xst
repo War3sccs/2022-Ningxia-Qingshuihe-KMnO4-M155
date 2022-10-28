@@ -17,9 +17,10 @@ chemical_supply_valve_1 := 0;
 chemical_supply_valve_2 := 0;
 rinsing_valve_1 := 0;
 rinsing_valve_2 := 0;
-auto_control.water_input_flow_setpoint := 0.0;
-waterin_valve_setting := 0.0;
-(*振荡器*)
+(*直接设计阀门开度原始值*)
+water_in_valve_control_source := 0;
+(*料斗加热器/振荡器*)
+powder_heater := 0;
 vibrator := 0;
 (*料斗加热器*)
 powder_heater := 0;

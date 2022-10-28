@@ -49,7 +49,7 @@
 (*储液槽液位低于开机液位，则开始制备高锰酸钾*)	
 (*通过控制溶药机螺杆启停控制溶药机启停*)	
 
-	IF polymer_storage_tank.start_polymer_preparing = 1 THEN
+	IF local_control.start_polymer_preparing = 1 THEN
 	   (*确认进水压力正常*) 
 	    IF water_pressure_data.low_pressure_alarm = 0 THEN
            (*确认溶药机螺杆、搅拌机都不在检修状态*) 
@@ -70,7 +70,7 @@
 	END_IF;
 	
 (*储液槽液位低于停机液位时维持制备状态，若高于停机液位，则停止制备*)	
-	IF polymer_storage_tank.start_polymer_preparing =0 THEN
+	IF local_control.start_polymer_preparing =0 THEN
        (*停止溶药机螺杆*) 
         local_control.powder_screw_start := 0;
 	END_IF;
