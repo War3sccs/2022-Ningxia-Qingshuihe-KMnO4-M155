@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-3-14:35:23" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.15" dateTime="date_and_time#2022-9-30-17:20:38"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-28-12:34:41" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.134" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<program>
 		<identProgram name="flow_calculate" type="SR" task="MAST"></identProgram>
-		<STSource>
-		</STSource>
+		<STSource>;
+(*计算进水流量*)
+water_flow_read(
+    frequency_source := water_flow_source,
+    flow_output =&gt; local_control.water_in_flow);
+
+(*计算高锰酸钾投加流量*)
+KMnO4_flow_read(
+    frequency_source := KMnO4_flow_source,
+    flow_output =&gt; local_control.KMnO4_solution_dosing_flow);
+
+</STSource>
 	</program>
 </STExchangeFile>

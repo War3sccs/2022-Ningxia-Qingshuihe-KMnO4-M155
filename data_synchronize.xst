@@ -97,11 +97,11 @@ end_if;
 
 
 
-(*计量泵参数同步*)
-remote_control.pump_1_status := local_control.pump_1_status;
+(*计量泵状态同步*)
 remote_control.pump_2_status := local_control.pump_2_status;
 remote_control.metering_pump_1_running_Hz := local_control.metering_pump_1_running_Hz;
 remote_control.metering_pump_2_running_Hz := local_control.metering_pump_2_running_Hz;
+
 (*计量泵故障复位*)
 remote_control.pump_1_malfunction := local_control.pump_1_malfunction;
 if local_control.pump_1_malfunction = 0 then
@@ -113,6 +113,9 @@ if local_control.pump_2_malfunction = 0 then
     local_control.pump_2_malfunction_reset := 0;
     remote_control.pump_2_malfunction_reset := 0;
 end_if;
+
+(*计量泵流量*)
+remote_control.KMnO4_solution_dosing_flow := local_control.KMnO4_solution_dosing_flow;
 
 
 (*搅拌机参数同步*)

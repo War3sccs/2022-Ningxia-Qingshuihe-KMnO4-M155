@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-17:38:15" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.132" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-28-12:4:44" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.134" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
 	<dataBlock>
 		<variables name="scale_int_to_real_1" typeName="scale_int_to_real"></variables>
 		<variables name="local_control" typeName="system_parameter">
@@ -250,6 +250,8 @@
 			<comment>高锰酸钾投加流量原始值</comment>
 			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
+		<variables name="water_flow_read" typeName="read_flow_meter"></variables>
+		<variables name="KMnO4_flow_read" typeName="read_flow_meter"></variables>
 	</dataBlock>
 	<FBSource nameOfFBType="scale_int_to_real" version="0.01" dateTime="dt#2022-09-30-17:00:55">
 		<attribute name="TypeCodeCheckSumString" value="FA28"></attribute>
@@ -1040,6 +1042,27 @@ temp_max := INT_TO_REAL (IN := output_max);
 (* 转换 *)
 output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (temp_max - temp_min) + temp_min);
 </STSource>
+		</FBProgram>
+	</FBSource>
+	<FBSource nameOfFBType="read_flow_meter" version="0.02" dateTime="dt#2022-10-28-12:02:04">
+		<attribute name="TypeCodeCheckSumString" value="FDE6"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="2661"></attribute>
+		<inputParameters>
+			<variables name="frequency_source" typeName="BOOL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</inputParameters>
+		<outputParameters>
+			<variables name="flow_output" typeName="REAL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</outputParameters>
+		<privateLocalVariables>
+			<variables name="frequency_source_real" typeName="REAL"></variables>
+		</privateLocalVariables>
+		<FBProgram name="frequency_to_flow">
+			<STSource>
+			</STSource>
 		</FBProgram>
 	</FBSource>
 </VariablesExchangeFile>
