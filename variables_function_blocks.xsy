@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-28-12:4:44" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.134" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-4-15:44:38" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.148" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<dataBlock>
 		<variables name="scale_int_to_real_1" typeName="scale_int_to_real"></variables>
 		<variables name="local_control" typeName="system_parameter">
@@ -28,12 +28,10 @@
 		<variables name="control_switch" typeName="EBOOL" topologicalAddress="%I0.2.0">
 			<comment>控制选择:远程/在地 0:在地 1:远程</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="emergency_stop" typeName="EBOOL" topologicalAddress="%I0.2.1">
 			<comment>紧急停机 0:停机 1:正常开机</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="vibrator_status" typeName="EBOOL" topologicalAddress="%I0.2.3">
 			<comment>振荡器 1:运行/0:停止</comment>
@@ -42,34 +40,42 @@
 		<variables name="chemical_supply_valve_1_shut" typeName="EBOOL" topologicalAddress="%I0.2.6">
 			<comment>1#供药电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="chemical_supply_valve_1_open" typeName="EBOOL" topologicalAddress="%I0.2.7">
 			<comment>1#供药电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="chemical_supply_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.8">
 			<comment>2#供药电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="chemical_supply_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.9">
 			<comment>2#供药电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="rinsing_valve_1_shut" typeName="EBOOL" topologicalAddress="%I0.2.10">
 			<comment>1#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="rinsing_valve_1_open" typeName="EBOOL" topologicalAddress="%I0.2.11">
 			<comment>1#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="rinsing_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.12">
 			<comment>2#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="rinsing_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.13">
 			<comment>2#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="powder_level_high_status" typeName="EBOOL" topologicalAddress="%I0.2.14">
 			<comment>料斗物位高 1:过高/0:正常</comment>
@@ -190,13 +196,11 @@
 		<variables name="stirrer_1_status" typeName="EBOOL" topologicalAddress="%I0.2.2">
 			<comment>1#搅拌机 1:运行/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="TON_1" typeName="TON"></variables>
 		<variables name="stirrer_2_status" typeName="EBOOL" topologicalAddress="%I0.2.4">
 			<comment>2#搅拌机 1:运行/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="auto_control" typeName="auto_control_parameter">
 			<comment>自动控制变量</comment>
@@ -205,7 +209,6 @@
 		<variables name="stirrer_3_status" typeName="EBOOL" topologicalAddress="%I0.2.5">
 			<comment>3#搅拌机 1:运行/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="TON_3" typeName="TON"></variables>
 		<variables name="pump_1_address" typeName="modbus_address"></variables>
@@ -239,6 +242,7 @@
 		<variables name="water_in_valve_position_source" typeName="INT" topologicalAddress="%IW0.3.0.0">
 			<comment>溶药机进水电动阀4-20mA原始值-输入</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="water_in_valve_control" typeName="scale_real_to_int"></variables>
 		<variables name="water_in_valve_reply" typeName="scale_int_to_real"></variables>
@@ -252,6 +256,7 @@
 		</variables>
 		<variables name="water_flow_read" typeName="read_flow_meter"></variables>
 		<variables name="KMnO4_flow_read" typeName="read_flow_meter"></variables>
+		<variables name="powder_motor_auto_control" typeName="powder_screw_auto_control"></variables>
 	</dataBlock>
 	<FBSource nameOfFBType="scale_int_to_real" version="0.01" dateTime="dt#2022-09-30-17:00:55">
 		<attribute name="TypeCodeCheckSumString" value="FA28"></attribute>
@@ -1044,11 +1049,11 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<FBSource nameOfFBType="read_flow_meter" version="0.02" dateTime="dt#2022-10-28-12:02:04">
+	<FBSource nameOfFBType="read_flow_meter" version="0.03" dateTime="dt#2022-10-28-16:30:41">
 		<attribute name="TypeCodeCheckSumString" value="FDE6"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="2661"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="B38B"></attribute>
 		<inputParameters>
-			<variables name="frequency_source" typeName="BOOL">
+			<variables name="frequency_source" typeName="DINT">
 				<attribute name="PositionPin" value="1"></attribute>
 			</variables>
 		</inputParameters>
@@ -1061,8 +1066,50 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 			<variables name="frequency_source_real" typeName="REAL"></variables>
 		</privateLocalVariables>
 		<FBProgram name="frequency_to_flow">
+			<STSource></STSource>
+		</FBProgram>
+	</FBSource>
+	<FBSource nameOfFBType="powder_screw_auto_control" version="0.01" dateTime="dt#2022-09-30-17:00:54">
+		<attribute name="TypeCodeCheckSumString" value="82E4"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="3085"></attribute>
+		<inputParameters>
+			<variables name="powder_feeder_capacity" typeName="REAL">
+				<comment>螺旋进料器投粉能力 kg/h</comment>
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+			<variables name="solution_prepare_flow" typeName="REAL">
+				<comment>溶液制备量L/h</comment>
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+			<variables name="solution_concentration" typeName="REAL">
+				<comment>高锰酸钾浓度%</comment>
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+		</inputParameters>
+		<outputParameters>
+			<variables name="powder_motor_frequency_setting" typeName="REAL">
+				<comment>进料电机频率Hz</comment>
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</outputParameters>
+		<privateLocalVariables>
+			<variables name="powder_dosing_flow" typeName="REAL">
+				<comment>溶药机固体加粉量kg/h</comment>
+			</variables>
+		</privateLocalVariables>
+		<FBProgram name="frequency_output">
 			<STSource>
-			</STSource>
+(*计算溶药机固体加粉量   制备量L/h*)
+(*高锰酸钾溶液投率mg/L  高锰酸钾密度g/cm3  加粉量kg/h  高锰酸钾溶液浓度%*)
+	powder_dosing_flow := solution_prepare_flow *
+    (*"PLC内部控制".高锰酸钾密度 *)
+	    solution_concentration;
+	
+   (*自动计算螺杆运行频率*) 
+   (*将计算出的固体加粉量， 对照50Hz时进料螺杆的进料能力， 计算出进料螺杆应该运行的频率*) 
+	    powder_motor_frequency_setting := powder_dosing_flow / powder_feeder_capacity * 50.0;
+			
+</STSource>
 		</FBProgram>
 	</FBSource>
 </VariablesExchangeFile>
