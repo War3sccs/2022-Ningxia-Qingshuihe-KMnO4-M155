@@ -63,9 +63,11 @@ END_IF;
         (*直接修改阀门开度原始值*)
         water_in_valve_control_source := 0;
 	ELSE
-	       (*设置PID setpoint*) 
-            (*手动模式下自动失效*)
-        auto_control.water_input_flow_setpoint := auto_control.solution_prepare_flow ;
+        (*进水自动控制*)
+        water_PID_control(liquid_flow := local_control.water_in_flow,
+                switch_auto_manual := local_control.solution_prepare_control_method,
+                water_in_PID_parameter := water_in_PID_parameter,
+                control_output =&gt; water_in_valve_control_source);
            (*溶药机螺杆运行时，搅拌机必须启动*) 
             (*螺杆不运行时，搅拌机可按基本程序，动、停交替*)
 	        auto_control.stirrer_1_auto_start := 1;
