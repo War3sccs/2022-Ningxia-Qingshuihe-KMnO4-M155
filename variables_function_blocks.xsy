@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-4-16:34:58" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.152" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-4-17:43:9" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.154" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<dataBlock>
 		<variables name="liquid_level_source" typeName="INT" topologicalAddress="%IW0.3.1.0">
 			<comment>储液池液位4-20mA原始值-输入</comment>
