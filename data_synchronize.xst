@@ -82,6 +82,8 @@ if control_switch = 0 then
     remote_control.powder_heater_manual_start := local_control.vibrator_manual_start;
     (*进水电动阀*)
     remote_control.waterin_valve_manual_setting := local_control.waterin_valve_manual_setting;
+    (*溶药机螺杆*)
+    remote_control.powder_screw_motor_Hz_manual := local_control.powder_screw_motor_Hz_manual;
 else
     (*溶药机手/自切换*)
     local_control.solution_prepare_control_method := remote_control.solution_prepare_control_method;
@@ -99,6 +101,8 @@ else
     local_control.powder_heater_manual_start := remote_control.vibrator_manual_start;
     (*进水电动阀*)
     local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
+    (*溶药机螺杆*)
+    local_control.powder_screw_motor_Hz_manual := remote_control.powder_screw_motor_Hz_manual;
 end_if;
 
 

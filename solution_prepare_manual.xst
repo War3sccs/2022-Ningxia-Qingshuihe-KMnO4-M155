@@ -14,7 +14,8 @@ powder_heater := local_control.powder_heater_manual_start;
 vibrator := local_control.vibrator_manual_start;
 (* 螺旋进料器 *)
 powder_screw_start := local_control.powder_screw_manual_start;
-remote_control.powder_screw_motor_Hz_manual := local_control.powder_screw_motor_Hz_manual;
+(*运行频率手动状态下由触摸屏设定*)
+auto_control.powder_motor_Hz_auto_setting := local_control.powder_screw_motor_Hz_manual;
 (*进水电动阀*)
 water_in_valve_control(
     input_value := local_control.waterin_valve_manual_setting,
