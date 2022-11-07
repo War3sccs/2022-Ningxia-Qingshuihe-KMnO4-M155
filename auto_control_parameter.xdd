@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-25-11:26:41" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.67" dateTime="date_and_time#2022-10-24-17:9:48"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-7-10:44:5" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.155" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<DDTSource DDTName="auto_control_parameter" version="0.01" dateTime="dt#2022-09-29-20:55:18">
 		<attribute name="TypeSignatureCheckSumString" value="1853"></attribute>
 		<structure>
@@ -58,6 +58,9 @@
 			</variables>
 			<variables name="powder_motor_Hz_auto_setting" typeName="REAL">
 				<comment>进料电机频率Hz</comment>
+			</variables>
+			<variables name="water_in_valve_auto_setting" typeName="REAL">
+				<comment>进水阀开度自动控制%</comment>
 			</variables>
 			<variables name="water_input_flow_setpoint" typeName="REAL">
 				<comment>进水流量PID控制setpoint</comment>
