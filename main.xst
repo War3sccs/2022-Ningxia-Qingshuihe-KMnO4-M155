@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-4-16:36:15" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.152" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-8-14:27:47" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.195" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="main" type="section" task="MAST">
 			<comment>主程序</comment>
@@ -24,15 +24,27 @@ If emergency_stop = 1 then
     if local_control.solution_prepare_control_method = 0 then
         solution_prepare_manual();
     else
-    	solution_preparing_control();
-	waterin_flow_auto_control();
+    	solution_preparing_control();	
+    end_if;
+    (* 计量泵控制 *)
+    (* 计量泵1# *)
+    if local_control.pump_1_control_method = 0 then
+        pump_1_manual_control(start_stop_in := local_control.metering_pump_1_manual_start,
+                frequency_in := local_control.metering_pump_1_Hz_manual_setting,
+                start_stop_out =&gt; metering_pump_fan_1,
+                frequency_out =&gt; auto_control.pump_1_motor_Hz_auto_setting);
+    end_if;
+    (* 计量泵2# *)
+    if local_control.pump_2_control_method = 0 then
+        pump_2_manual_control(start_stop_in := local_control.metering_pump_2_manual_start,
+                frequency_in := local_control.metering_pump_2_Hz_manual_setting,
+                start_stop_out =&gt; metering_pump_fan_2,
+                frequency_out =&gt; auto_control.pump_2_motor_Hz_auto_setting);
     end_if;
 else
     emergency_stop_procedure();
 end_if;
 
-(*Modbus测试*)
-(*modbus_test();*)
 </STSource>
 	</program>
 	<program>
@@ -147,6 +159,7 @@ end_if;
 
 
 (*计量泵状态同步*)
+remote_control.pump_1_status := local_control.pump_1_status;
 remote_control.pump_2_status := local_control.pump_2_status;
 remote_control.metering_pump_1_running_Hz := local_control.metering_pump_1_running_Hz;
 remote_control.metering_pump_2_running_Hz := local_control.metering_pump_2_running_Hz;
@@ -166,6 +179,22 @@ end_if;
 (*计量泵流量*)
 remote_control.KMnO4_solution_dosing_flow := local_control.KMnO4_solution_dosing_flow;
 
+(*按控制方式切换。上位机:1/在地:0*)
+if control_switch = 0 then
+    (*加药泵手/自切换*)
+    remote_control.pump_1_control_method := local_control.pump_1_control_method;
+    remote_control.pump_2_control_method := local_control.pump_2_control_method;
+    (*运行频率手动设置*)
+    remote_control.metering_pump_1_Hz_manual_setting := local_control.metering_pump_1_Hz_manual_setting;
+    remote_control.metering_pump_2_Hz_manual_setting := local_control.metering_pump_2_Hz_manual_setting;
+else
+    (*加药泵手/自切换*)
+    local_control.pump_1_control_method := remote_control.pump_1_control_method;
+    local_control.pump_2_control_method := remote_control.pump_2_control_method;
+    (*运行频率手动设置*)
+    local_control.metering_pump_1_Hz_manual_setting := remote_control.metering_pump_1_Hz_manual_setting;
+    local_control.metering_pump_2_Hz_manual_setting := remote_control.metering_pump_2_Hz_manual_setting;
+end_if;
 
 (*搅拌机参数同步*)
 
@@ -285,6 +314,8 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<comment>料斗物位低 1:过低/0:正常</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="pump_2_manual_control" typeName="pump_dosing_manual"></variables>
+		<variables name="pump_1_manual_control" typeName="pump_dosing_manual"></variables>
 		<variables name="chemical_supply_valve_2" typeName="EBOOL" topologicalAddress="%Q0.2.22">
 			<comment>2#供药电动阀 1:关闭/0:打开</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
@@ -358,7 +389,11 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="scale_int_to_real_1" typeName="scale_int_to_real"></variables>
+		<variables name="water_contro_PIDFF" typeName="PIDFF"></variables>
+		<variables name="PIDFF_info" typeName="Info_PIDFF"></variables>
 		<variables name="powder_motor_auto_control" typeName="powder_screw_auto_control"></variables>
+		<variables name="PIDFF_parameter" typeName="Para_PIDFF"></variables>
+		<variables name="PIDFF_status" typeName="WORD"></variables>
 		<variables name="liquid_level_source" typeName="INT" topologicalAddress="%IW0.3.1.0">
 			<comment>储液池液位4-20mA原始值-输入</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
@@ -769,6 +804,35 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 			</variables>
 		</structure>
 	</DDTSource>
+	<FBSource nameOfFBType="pump_dosing_manual" version="0.01" dateTime="dt#2022-11-08-14:20:22">
+		<attribute name="TypeCodeCheckSumString" value="68D2"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="4E9C"></attribute>
+		<inputParameters>
+			<variables name="start_stop_in" typeName="BOOL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+			<variables name="frequency_in" typeName="REAL">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+		</inputParameters>
+		<outputParameters>
+			<variables name="start_stop_out" typeName="BOOL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+			<variables name="frequency_out" typeName="REAL">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+		</outputParameters>
+		<FBProgram name="pump_manual_control">
+			<STSource>
+(*泵启停*)
+start_stop_out := start_stop_in;
+(*频率设置*)
+frequency_out := frequency_out;
+			
+</STSource>
+		</FBProgram>
+	</FBSource>
 	<program>
 		<identProgram name="emergency_stop_procedure" type="SR" task="MAST"></identProgram>
 		<STSource>(*关闭所有设备*)
@@ -822,8 +886,8 @@ water_in_valve_control(
     output_value =&gt; water_in_valve_control_source);
 </STSource>
 	</program>
-	<DDTSource DDTName="auto_control_parameter" version="0.01" dateTime="dt#2022-09-29-20:55:18">
-		<attribute name="TypeSignatureCheckSumString" value="1853"></attribute>
+	<DDTSource DDTName="auto_control_parameter" version="0.03" dateTime="dt#2022-11-08-13:05:12">
+		<attribute name="TypeSignatureCheckSumString" value="75BC"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -878,6 +942,15 @@ water_in_valve_control(
 			</variables>
 			<variables name="powder_motor_Hz_auto_setting" typeName="REAL">
 				<comment>进料电机频率Hz</comment>
+			</variables>
+			<variables name="pump_1_motor_Hz_auto_setting" typeName="REAL">
+				<comment>泵1电机频率Hz</comment>
+			</variables>
+			<variables name="pump_2_motor_Hz_auto_setting" typeName="REAL">
+				<comment>泵2电机频率Hz</comment>
+			</variables>
+			<variables name="water_in_valve_auto_setting" typeName="REAL">
+				<comment>进水阀开度自动控制%</comment>
 			</variables>
 			<variables name="water_input_flow_setpoint" typeName="REAL">
 				<comment>进水流量PID控制setpoint</comment>
@@ -1003,8 +1076,7 @@ END_IF;
         else
             auto_control.powder_screw_auto_start:= 0;
 	    END_IF;
-    else
-        auto_control.powder_screw_auto_start:= 0;
+	    (*  最外层的IF不能有else，液位高于开机液位，仍不能停机，直至到达停机液位*)
 	END_IF;
 	
 (*储液槽液位高于开机液位但低于停机液位时维持制备状态，若高于停机液位，则停止制备*)	
@@ -1022,9 +1094,65 @@ END_IF;
         (*直接修改阀门开度原始值*)
         water_in_valve_control_source := 0;
 	ELSE
-	       (*设置PID setpoint*) 
-            (*手动模式下自动失效*)
-        auto_control.water_input_flow_setpoint := auto_control.solution_prepare_flow ;
+        (*进水自动控制*)
+        (*简易PID控制程序*)
+        (*water_PID_control(liquid_flow := local_control.water_in_flow,*)
+                (*switch_auto_manual := local_control.solution_prepare_control_method,*)
+                (*water_in_PID_parameter := water_in_PID_parameter,*)
+                (*control_output =&gt; water_in_valve_control_source);*)
+        (*完全PID控制程序*)
+        (*PID控制参数*)
+        PIDFF_parameter.pv_inf := 0.0;
+        PIDFF_parameter.pv_sup := 3000.0;
+        PIDFF_parameter.out_inf := 0.0;
+        PIDFF_parameter.out_sup := 100.0;
+        PIDFF_parameter.rev_dir := 0;
+        PIDFF_parameter.mix_par := 1;
+        PIDFF_parameter.aw_type := 1;
+        PIDFF_parameter.en_rcpy := 0;
+        (*P参数*)
+        PIDFF_parameter.kp := 0.00001;
+        (*积分作用时间*)
+        PIDFF_parameter.ti := T#10s;
+        (*微分作用时间*)
+        PIDFF_parameter.td := T#0s;
+        (*微分系数*)
+        PIDFF_parameter.kd := 1.0;
+        PIDFF_parameter.pv_dev := 1;
+        PIDFF_parameter.bump := 0;
+        (*死区设置，在死区内的操作*)
+        PIDFF_parameter.dband := 0.01;
+        PIDFF_parameter.gain_kp := 0.2;
+        PIDFF_parameter.ovs_att := 0.0;
+        PIDFF_parameter.outbias := 0.0;
+        (*输出最大最小值 *)
+        PIDFF_parameter.out_min := 12.0;
+        PIDFF_parameter.out_max := 45.0;
+        (*增速限制*)
+        PIDFF_parameter.outrate := 3.0;
+
+        (*PID控制*)
+        water_contro_PIDFF(PV := local_control.water_in_flow,
+                SP := local_control.solution_preparing_flow_setting,
+                (*FF := *)
+                (*RCPY :=*)
+                MAN_AUTO := local_control.solution_prepare_control_method,
+                PARA := PIDFF_parameter,
+                (*TR_I :=*)
+                TR_S := 0,
+                (*OUTD :=*)
+                (*MA_O :=*)
+                INFO =&gt; PIDFF_info,
+                STATUS =&gt; PIDFF_status,
+                OUT := auto_control.water_in_valve_auto_setting);
+        (*控制值传输到4-20mA模块*)
+        water_in_valve_control(
+            input_value := auto_control.water_in_valve_auto_setting,
+            input_min := 0.0,
+            input_max := 100.0,
+            output_min := 0,
+            output_max := 10000,
+            output_value =&gt; water_in_valve_control_source);
            (*溶药机螺杆运行时，搅拌机必须启动*) 
             (*螺杆不运行时，搅拌机可按基本程序，动、停交替*)
 	        auto_control.stirrer_1_auto_start := 1;
@@ -1038,6 +1166,7 @@ powder_motor_auto_control(powder_feeder_capacity := 42.425,
         solution_prepare_flow := local_control.solution_preparing_flow_setting,
         solution_concentration := local_control.solution_concentration,
         powder_motor_frequency_setting =&gt; auto_control.powder_motor_Hz_auto_setting);
+
 </STSource>
 	</program>
 	<FBSource nameOfFBType="powder_screw_auto_control" version="0.02" dateTime="dt#2022-11-04-16:22:35">
@@ -1136,8 +1265,8 @@ KMnO4_flow_read(
     flow_output =&gt; local_control.KMnO4_solution_dosing_flow);
 </STSource>
 	</program>
-	<FBSource nameOfFBType="read_flow_meter" version="0.03" dateTime="dt#2022-10-28-16:30:41">
-		<attribute name="TypeCodeCheckSumString" value="FDE6"></attribute>
+	<FBSource nameOfFBType="read_flow_meter" version="0.03" dateTime="dt#2022-10-28-12:45:20">
+		<attribute name="TypeCodeCheckSumString" value="E0FD"></attribute>
 		<attribute name="TypeSignatureCheckSumString" value="B38B"></attribute>
 		<inputParameters>
 			<variables name="frequency_source" typeName="DINT">
@@ -1153,12 +1282,13 @@ KMnO4_flow_read(
 			<variables name="frequency_source_real" typeName="REAL"></variables>
 		</privateLocalVariables>
 		<FBProgram name="frequency_to_flow">
-			<STSource></STSource>
+			<STSource>
+(*频率转换为real类型*)
+frequency_source_real := DINT_TO_REAL(IN := frequency_source);
+(*每脉冲0.001L，频率为Hz*，流量转换为L/h*)
+flow_output := frequency_source_real * 0.001 * 60.0 * 60.0;                
+			
+</STSource>
 		</FBProgram>
 	</FBSource>
-	<program>
-		<identProgram name="waterin_flow_auto_control" type="SR" task="MAST"></identProgram>
-		<STSource>;
-</STSource>
-	</program>
 </STExchangeFile>

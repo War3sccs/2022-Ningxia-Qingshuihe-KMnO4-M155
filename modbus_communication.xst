@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-16:14:56" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.129" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-8-12:3:36" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.192" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="modbus_communication" type="section" task="FAST"></identProgram>
 		<STSource>Case Modbus_communication_index of
@@ -46,7 +46,7 @@
                        connect_report =&gt; pump_2_read_status.report);
     3:
     (*写螺杆变频器数据*)
-    pump_1_drive_write(device_address := '0.0.0.4.MBS',
+    powder_screw_drive_write(device_address := '0.0.0.4.MBS',
                        first_object := 8501,
                        object_number := 2,
                        motor_status := local_control.powder_screw_status, 
@@ -59,6 +59,36 @@
                        data_write := powder_screw_data_write, 
                        communication_index := Modbus_communication_index,
                        cancel := powder_screw_write_status.cancel);
+    4:
+    (*写1#计量泵变频器数据*)
+    pump_1_drive_write(device_address := '0.0.0.2.MBS',
+                       first_object := 8501,
+                       object_number := 2,
+                       motor_status := local_control.pump_1_status, 
+                       motor_start := metering_pump_fan_1, 
+                       motor_Hz_setting := auto_control.pump_1_motor_Hz_auto_setting, 
+                       motor_data_read := pump_1_data_read, 
+                       malfunction_reset := local_control.pump_1_malfunction_reset, 
+                       activity =&gt; pump_1_write_status.activity,
+                       connect_report =&gt; pump_1_write_status.report,
+                       data_write := pump_1_data_write, 
+                       communication_index := Modbus_communication_index,
+                       cancel := pump_1_write_status.cancel);
+    5:
+    (*写2#计量泵变频器数据*)
+    pump_2_drive_write(device_address := '0.0.0.3.MBS',
+                       first_object := 8502,
+                       object_number := 2,
+                       motor_status := local_control.pump_2_status, 
+                       motor_start := metering_pump_fan_2, 
+                       motor_Hz_setting := auto_control.pump_2_motor_Hz_auto_setting, 
+                       motor_data_read := pump_2_data_read, 
+                       malfunction_reset := local_control.pump_2_malfunction_reset, 
+                       activity =&gt; pump_2_write_status.activity,
+                       connect_report =&gt; pump_2_write_status.report,
+                       data_write := pump_2_data_write, 
+                       communication_index := Modbus_communication_index,
+                       cancel := pump_2_write_status.cancel);
 else
     Modbus_communication_index := 0;
 end_case;
@@ -68,29 +98,29 @@ end_case;
 	<dataBlock>
 		<variables name="pump_2_drive" typeName="motor_data_read"></variables>
 		<variables name="powder_screw_data_read" typeName="modbus_data_read"></variables>
-		<variables name="pump_1_drive" typeName="motor_data_read"></variables>
 		<variables name="pump_1_drive_write" typeName="motor_data_write"></variables>
+		<variables name="pump_1_data_read" typeName="modbus_data_read"></variables>
+		<variables name="pump_2_data_read" typeName="modbus_data_read"></variables>
+		<variables name="pump_1_drive" typeName="motor_data_read"></variables>
 		<variables name="Modbus_communication_index" typeName="INT"></variables>
 		<variables name="powder_screw_start" typeName="EBOOL">
 			<comment>"溶药机螺杆启停"</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="powder_screw_drive" typeName="motor_data_read"></variables>
 		<variables name="powder_screw_read_status" typeName="modbus_connect_brief"></variables>
 		<variables name="pump_1_read_status" typeName="modbus_connect_brief"></variables>
 		<variables name="powder_screw_data_write" typeName="modbus_data_write"></variables>
-		<variables name="pump_1_data_read" typeName="modbus_data_read"></variables>
 		<variables name="auto_control" typeName="auto_control_parameter">
 			<comment>自动控制变量</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="pump_2_data_read" typeName="modbus_data_read"></variables>
-		<variables name="pump_2_read_status" typeName="modbus_connect_brief"></variables>
-		<variables name="powder_screw_drive" typeName="motor_data_read"></variables>
 		<variables name="local_control" typeName="system_parameter">
 			<comment>在地控制参数</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="powder_screw_write_status" typeName="modbus_connect_brief"></variables>
+		<variables name="pump_2_read_status" typeName="modbus_connect_brief"></variables>
 	</dataBlock>
 	<FBSource nameOfFBType="motor_data_read" version="0.07" dateTime="dt#2022-10-26-11:54:42">
 		<attribute name="TypeCodeCheckSumString" value="6ECD"></attribute>
@@ -317,8 +347,8 @@ communication_index := communication_index + 1;
 			<variables name="report" typeName="INT"></variables>
 		</structure>
 	</DDTSource>
-	<DDTSource DDTName="auto_control_parameter" version="0.01" dateTime="dt#2022-09-29-20:55:18">
-		<attribute name="TypeSignatureCheckSumString" value="1853"></attribute>
+	<DDTSource DDTName="auto_control_parameter" version="0.02" dateTime="dt#2022-11-07-11:26:57">
+		<attribute name="TypeSignatureCheckSumString" value="ADE3"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -373,6 +403,9 @@ communication_index := communication_index + 1;
 			</variables>
 			<variables name="powder_motor_Hz_auto_setting" typeName="REAL">
 				<comment>进料电机频率Hz</comment>
+			</variables>
+			<variables name="water_in_valve_auto_setting" typeName="REAL">
+				<comment>进水阀开度自动控制%</comment>
 			</variables>
 			<variables name="water_input_flow_setpoint" typeName="REAL">
 				<comment>进水流量PID控制setpoint</comment>
