@@ -9,6 +9,9 @@
 			<variables name="start_stop_in" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
 			</variables>
+			<variables name="valve_position" typeName="BOOL">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
 			<variables name="frequency_in" typeName="REAL">
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>

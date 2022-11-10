@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-8-11:59:36" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.191" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-10-14:57:51" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.200" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="solution_preparing_control" type="SR" task="MAST"></identProgram>
 		<STSource>(*溶药机控制 *)	
@@ -20,32 +20,34 @@ END_IF;
 	
 (*储液槽液位低于开机液位，则开始制备高锰酸钾*)	
 (*通过控制溶药机螺杆启停控制溶药机启停*)	
-	IF local_control.start_polymer_preparing = 1 THEN
+IF local_control.start_polymer_preparing = 1 THEN
 	   (*确认进水压力正常*) 
-	    IF local_control.low_pressure_alarm = 0 THEN
-           (*确认溶药机螺杆、搅拌机都不在检修状态*) 
-            IF local_control.powder_screw_maintain = 0
-                AND local_control.stirrer_1_maintain = 0
-                AND local_control.stirrer_2_maintain = 0
-                AND local_control.stirrer_3_maintain = 0
-                AND local_control.water_in_valve_maintain = 0
-                AND local_control.water_pressure_sensor_maintain = 0 THEN
-               (*料斗物位不能过低*) 
-               (*料斗物位低探头需要取反，1为正常，0为过低*) 
-                IF local_control.powder_level_low = 1 THEN
+IF local_control.low_pressure_alarm = 0 THEN
+       (*确认溶药机螺杆、搅拌机都不在检修状态*) 
+    IF local_control.powder_screw_maintain = 0
+        AND local_control.stirrer_1_maintain = 0
+        AND local_control.stirrer_2_maintain = 0
+        AND local_control.stirrer_3_maintain = 0
+        AND local_control.water_in_valve_maintain = 0
+        AND local_control.water_pressure_sensor_maintain = 0 THEN
+           (*料斗物位不能过低*) 
+           (*料斗物位低探头需要取反，1为正常，0为过低*) 
+            IF local_control.powder_level_low = 1 THEN
+                (*储液槽液位低于开机液位，则开始制备高锰酸钾*)	
+                IF local_control.start_polymer_preparing = 1 THEN
                    (*启动溶药机螺杆*) 
                     auto_control.powder_screw_auto_start:= 1;
-                else
-                    auto_control.powder_screw_auto_start:= 0;
+                (*  这层的IF不能有else，液位高于开机液位，仍不能停机，直至到达停机液位*)
                 END_IF;
             else
                 auto_control.powder_screw_auto_start:= 0;
             END_IF;
-        else
-            auto_control.powder_screw_auto_start:= 0;
-	    END_IF;
-	    (*  最外层的IF不能有else，液位高于开机液位，仍不能停机，直至到达停机液位*)
-	END_IF;
+    else
+        auto_control.powder_screw_auto_start:= 0;
+    END_IF;
+else
+    auto_control.powder_screw_auto_start:= 0;
+END_IF;
 	
 (*储液槽液位高于开机液位但低于停机液位时维持制备状态，若高于停机液位，则停止制备*)	
     IF local_control.stop_polymer_preparing = 1
@@ -223,8 +225,8 @@ powder_motor_auto_control(powder_feeder_capacity := 42.425,
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<DDTSource DDTName="auto_control_parameter" version="0.02" dateTime="dt#2022-11-07-11:26:57">
-		<attribute name="TypeSignatureCheckSumString" value="ADE3"></attribute>
+	<DDTSource DDTName="auto_control_parameter" version="0.03" dateTime="dt#2022-11-08-13:05:12">
+		<attribute name="TypeSignatureCheckSumString" value="75BC"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -279,6 +281,12 @@ powder_motor_auto_control(powder_feeder_capacity := 42.425,
 			</variables>
 			<variables name="powder_motor_Hz_auto_setting" typeName="REAL">
 				<comment>进料电机频率Hz</comment>
+			</variables>
+			<variables name="pump_1_motor_Hz_auto_setting" typeName="REAL">
+				<comment>泵1电机频率Hz</comment>
+			</variables>
+			<variables name="pump_2_motor_Hz_auto_setting" typeName="REAL">
+				<comment>泵2电机频率Hz</comment>
 			</variables>
 			<variables name="water_in_valve_auto_setting" typeName="REAL">
 				<comment>进水阀开度自动控制%</comment>
