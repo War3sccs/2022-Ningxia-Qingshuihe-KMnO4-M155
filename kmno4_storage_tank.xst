@@ -5,13 +5,38 @@
 	<program>
 		<identProgram name="KMnO4_storage_tank" type="SR" task="MAST"></identProgram>
 		<STSource>(* 将原始数据转换为液位值 *)
-(* 0-10000转换为0.0米-1.2米 *)
+    (*超声波液位计满位置为1160-250=910mm,*)
+    (*blocking distance 以内不可测*)
+    (*为防止超声波液位计测不准，*)
+    (*高液位报警，停机液位设置值上限，均应小于900mm*)
+    (*4-20mA输出上限略大于900mm，设为1000mm*)
+    (*开机液位应小于停机液位，最高设为850mm*)
+    (*低液位报警应小于开机液位，最高设为800mm*)
+(* 0-10000转换为0.0米-1米 *)
 scale_int_to_real_1 (input_value := liquid_level_source,
                      input_min := 0,
                      input_max := 10000,
                      output_min := 0.0,
-                     output_max := 1.2,
+                     output_max := 1.0,
                      output_value =&gt; local_control.liquid_level_KMnO4);
+ (*对液位报警 的设置值 进行限制*)
+(*高液位报警 不得大于0.9m，否则设为0.9m*)
+if local_control.liquid_high_setting &gt; 0.9 then 
+    local_control.liquid_high_setting := 0.9;
+end_if;
+(*停机液位 不得大于0.9m，否则设为0.9m*)
+if local_control.stop_setting &gt; 0.9 then
+    local_control.stop_setting := 0.9;
+end_if;
+(*开机液位 不得大于0.85m，否则设为0.85m*)
+if local_control.start_setting &gt; 0.85 then
+    local_control.start_setting := 0.85;
+end_if;
+(*低液位报警 不得大于0.8m，否则设为0.8m*)
+if local_control.liquid_low_setting &gt; 0.8 then
+    local_control.liquid_low_setting := 0.8;
+end_if;
+
 (* 高液位报警 *)
 if local_control.liquid_level_KMnO4 &gt;= local_control.liquid_high_setting then
 local_control.high_level_alarm := 1;
