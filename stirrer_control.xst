@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-14-17:1:43" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.204" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-15-12:23:48" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.216" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="stirrer_control" type="SR" task="MAST"></identProgram>
 		<STSource>(*控制搅拌机*)
@@ -23,7 +23,7 @@
 	END_IF;
 
     if	auto_control.stirrer_status = 1 then
-        auto_control.stirrer_stop_time := 0;
+        (*不能在此处将停止时间清0，否则会影响后续判断，此时清0，后续判断 时会觉得停止时间不够，继续停*)
     TON_1 (IN := auto_control.stirrer_running_time_reset,
            PT := T#1m,
         Q =&gt; auto_control.stirrer_running_timing ,
@@ -40,7 +40,7 @@
 	END_IF;
 
     if	auto_control.stirrer_status = 0 then
-        auto_control.stirrer_running_time := 0;
+        (*不能在此处将运行时间清0，否则会影响后续判断，此时清0，后续判断 时会觉得运行时间不够，继续开*)
     TON_2 (IN := auto_control.stirrer_stop_time_reset,
            PT := T#1m,
         Q =&gt; auto_control.stirrer_stop_timing ,
@@ -61,21 +61,24 @@
 	IF local_control.powder_screw_status = 0 THEN
 	    (*溶药机螺杆停止时，搅拌机开/停轮换*)
 	    IF auto_control.stirrer_running_time &gt;= local_control.stirrer_running_time_setting
-	        AND
-	        local_control.stirrer_running_time_setting &gt; 0
+	        (*AND*)
+            (*auto_control.stirrer_status = 1*)
+	        (*local_control.stirrer_running_time_setting &gt; 0*)
 	    THEN
-            (*停搅拌机计时置0*)
-	        auto_control.stirrer_stop_time := 0;
+            (*搅拌机运行计时置0*)
+	        auto_control.stirrer_running_time := 0;
 	        (*搅拌机运行一段时间之后暂停冷却*)
             auto_control.stirrer_1_auto_start := 0;
             auto_control.stirrer_2_auto_start := 0;
             auto_control.stirrer_3_auto_start := 0;
 	    END_IF;
 	    IF auto_control.stirrer_stop_time &gt;= local_control.stirrer_stop_time_setting
-	        AND
-	        local_control.stirrer_stop_time_setting &gt; 0
+	        (*AND*)
+	        (*local_control.stirrer_stop_time_setting &gt; 0*)
+            (*auto_control.stirrer_status = 0*)
 	    THEN
-	        auto_control.stirrer_running_time := 0;
+            (*停搅拌机计时置0*)
+	        auto_control.stirrer_stop_time := 0;
             auto_control.stirrer_1_auto_start := 1;
             auto_control.stirrer_2_auto_start := 1;
             auto_control.stirrer_3_auto_start := 1;
@@ -86,10 +89,19 @@
 stirrer_1 := auto_control.stirrer_1_auto_start ;
 stirrer_2 := auto_control.stirrer_2_auto_start ;
 stirrer_3 := auto_control.stirrer_3_auto_start ;
-
 </STSource>
 	</program>
 	<dataBlock>
+		<variables name="stirrer_3" typeName="EBOOL" topologicalAddress="%Q0.2.18">
+			<comment>3#搅拌机启停</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="stirrer_2" typeName="EBOOL" topologicalAddress="%Q0.2.17">
+			<comment>2#搅拌机启停</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
 		<variables name="remote_control" typeName="system_parameter">
 			<comment>远程控制参数</comment>
 		</variables>
@@ -99,6 +111,10 @@ stirrer_3 := auto_control.stirrer_3_auto_start ;
 		</variables>
 		<variables name="auto_control" typeName="auto_control_parameter">
 			<comment>自动控制变量</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="stirrer_1" typeName="EBOOL" topologicalAddress="%Q0.2.16">
+			<comment>1#搅拌机启停</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="stirrer_1_status" typeName="EBOOL" topologicalAddress="%I0.2.2">
