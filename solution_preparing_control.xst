@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-10-14:57:51" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.200" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-24-13:37:16" content="Structured source file" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.216" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="solution_preparing_control" type="SR" task="MAST"></identProgram>
 		<STSource>(*溶药机控制 *)	
@@ -11,20 +11,26 @@ if emergency_stop = 0 then
     stirrer_1 := 0 ;
     stirrer_2 := 0 ;
     stirrer_3 := 0 ;
+    (*料斗加热器/振荡器*)
+    powder_heater := 0 ;
+    vibrator := 0 ;
 else
     powder_screw_start := auto_control.powder_screw_auto_start;
     stirrer_1 := auto_control.stirrer_1_auto_start ;
     stirrer_2 := auto_control.stirrer_2_auto_start ;
     stirrer_3 := auto_control.stirrer_3_auto_start ;
+    (*料斗加热器/振荡器*)
+    powder_heater := local_control.powder_heater_manual_start;
+    vibrator := local_control.vibrator_manual_start;
 END_IF;
 	
 (*储液槽液位低于开机液位，则开始制备高锰酸钾*)	
 (*通过控制溶药机螺杆启停控制溶药机启停*)	
 IF local_control.start_polymer_preparing = 1 THEN
 	   (*确认进水压力正常*) 
-IF local_control.low_pressure_alarm = 0 THEN
+    IF local_control.low_pressure_alarm = 0 THEN
        (*确认溶药机螺杆、搅拌机都不在检修状态*) 
-    IF local_control.powder_screw_maintain = 0
+        IF local_control.powder_screw_maintain = 0
         AND local_control.stirrer_1_maintain = 0
         AND local_control.stirrer_2_maintain = 0
         AND local_control.stirrer_3_maintain = 0
@@ -42,6 +48,9 @@ IF local_control.low_pressure_alarm = 0 THEN
             else
                 auto_control.powder_screw_auto_start:= 0;
             END_IF;
+        else
+            auto_control.powder_screw_auto_start:= 0;
+        END_IF;
     else
         auto_control.powder_screw_auto_start:= 0;
     END_IF;
