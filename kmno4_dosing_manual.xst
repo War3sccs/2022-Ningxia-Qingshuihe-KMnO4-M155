@@ -6,8 +6,22 @@
 		<identProgram name="KMnO4_dosing_manual" type="SR" task="MAST"></identProgram>
 		<STSource>(*计量泵运行的执行变量是metering_pump_fan_1和metering_pump_fan_2*)
 (*泵启停*)
-metering_pump_fan_1 := local_control.metering_pump_1_manual_start;
-metering_pump_fan_2 := local_control.metering_pump_2_manual_start;
+if local_control.low_level_alarm = 1 then
+    metering_pump_fan_1 := 0 ;
+    metering_pump_fan_2 := 0 ;
+else
+    if local_control.pump_1_maintain = 1 then
+        metering_pump_fan_1 := 0 ;
+    else
+        metering_pump_fan_1 := local_control.metering_pump_1_manual_start;
+    END_IF;
+    if local_control.pump_2_maintain = 1 then
+        metering_pump_fan_2 := 0 ;
+    else
+        metering_pump_fan_2 := local_control.metering_pump_2_manual_start;
+    END_IF;
+END_IF;
+
 (*频率设置*)
 auto_control.pump_1_motor_Hz_auto_setting := local_control.metering_pump_1_Hz_manual_setting;
 auto_control.pump_2_motor_Hz_auto_setting := local_control.metering_pump_2_Hz_manual_setting;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-14-17:29:5" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.206" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-11:10:14" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.219" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="main" type="section" task="MAST">
 			<comment>主程序</comment>
@@ -30,6 +30,8 @@ If emergency_stop = 1 then
     (* 计量泵1# *)
     if local_control.pump_1_control_method = 0 then
         pump_1_manual_control(start_stop_in := local_control.metering_pump_1_manual_start,
+                low_level_alarm := local_control.low_level_alarm,
+                pump_maintain := local_control.pump_1_maintain,
                 frequency_in := local_control.metering_pump_1_Hz_manual_setting,
                 start_stop_out =&gt; metering_pump_fan_1,
                 frequency_out =&gt; auto_control.pump_1_motor_Hz_auto_setting);
@@ -37,6 +39,8 @@ If emergency_stop = 1 then
     (* 计量泵2# *)
     if local_control.pump_2_control_method = 0 then
         pump_2_manual_control(start_stop_in := local_control.metering_pump_2_manual_start,
+                low_level_alarm := local_control.low_level_alarm,
+                pump_maintain := local_control.pump_2_maintain,
                 frequency_in := local_control.metering_pump_2_Hz_manual_setting,
                 start_stop_out =&gt; metering_pump_fan_2,
                 frequency_out =&gt; auto_control.pump_2_motor_Hz_auto_setting);
@@ -809,14 +813,20 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 		</structure>
 	</DDTSource>
 	<FBSource nameOfFBType="pump_dosing_manual" version="0.02" dateTime="dt#2022-11-08-14:30:46">
-		<attribute name="TypeCodeCheckSumString" value="A872"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="4E9C"></attribute>
+		<attribute name="TypeCodeCheckSumString" value="E689"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="3DF1"></attribute>
 		<inputParameters>
 			<variables name="start_stop_in" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
 			</variables>
-			<variables name="frequency_in" typeName="REAL">
+			<variables name="low_level_alarm" typeName="BOOL">
 				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+			<variables name="pump_maintain" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="frequency_in" typeName="REAL">
+				<attribute name="PositionPin" value="4"></attribute>
 			</variables>
 		</inputParameters>
 		<outputParameters>
@@ -830,7 +840,15 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 		<FBProgram name="pump_manual_control">
 			<STSource>
 (*泵启停*)
-start_stop_out := start_stop_in;
+if low_level_alarm = 1 then
+    start_stop_out := 0 ;
+else
+    if pump_maintain = 1 then
+        start_stop_out := 0 ;
+    else
+        start_stop_out := start_stop_in;
+    END_IF;
+END_IF;
 (*频率设置*)
 frequency_out := frequency_in;
 			
@@ -1039,7 +1057,7 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 	END_IF;
 
     if	auto_control.stirrer_status = 1 then
-        auto_control.stirrer_stop_time := 0;
+        (*不能在此处将停止时间清0，否则会影响后续判断，此时清0，后续判断 时会觉得停止时间不够，继续停*)
     TON_1 (IN := auto_control.stirrer_running_time_reset,
            PT := T#1m,
         Q =&gt; auto_control.stirrer_running_timing ,
@@ -1056,7 +1074,7 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 	END_IF;
 
     if	auto_control.stirrer_status = 0 then
-        auto_control.stirrer_running_time := 0;
+        (*不能在此处将运行时间清0，否则会影响后续判断，此时清0，后续判断 时会觉得运行时间不够，继续开*)
     TON_2 (IN := auto_control.stirrer_stop_time_reset,
            PT := T#1m,
         Q =&gt; auto_control.stirrer_stop_timing ,
@@ -1077,21 +1095,24 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 	IF local_control.powder_screw_status = 0 THEN
 	    (*溶药机螺杆停止时，搅拌机开/停轮换*)
 	    IF auto_control.stirrer_running_time &gt;= local_control.stirrer_running_time_setting
-	        AND
-	        local_control.stirrer_running_time_setting &gt; 0
+	        (*AND*)
+            (*auto_control.stirrer_status = 1*)
+	        (*local_control.stirrer_running_time_setting &gt; 0*)
 	    THEN
-            (*停搅拌机计时置0*)
-	        auto_control.stirrer_stop_time := 0;
+            (*搅拌机运行计时置0*)
+	        auto_control.stirrer_running_time := 0;
 	        (*搅拌机运行一段时间之后暂停冷却*)
             auto_control.stirrer_1_auto_start := 0;
             auto_control.stirrer_2_auto_start := 0;
             auto_control.stirrer_3_auto_start := 0;
 	    END_IF;
 	    IF auto_control.stirrer_stop_time &gt;= local_control.stirrer_stop_time_setting
-	        AND
-	        local_control.stirrer_stop_time_setting &gt; 0
+	        (*AND*)
+	        (*local_control.stirrer_stop_time_setting &gt; 0*)
+            (*auto_control.stirrer_status = 0*)
 	    THEN
-	        auto_control.stirrer_running_time := 0;
+            (*停搅拌机计时置0*)
+	        auto_control.stirrer_stop_time := 0;
             auto_control.stirrer_1_auto_start := 1;
             auto_control.stirrer_2_auto_start := 1;
             auto_control.stirrer_3_auto_start := 1;
@@ -1133,11 +1154,17 @@ if emergency_stop = 0 then
     stirrer_1 := 0 ;
     stirrer_2 := 0 ;
     stirrer_3 := 0 ;
+    (*料斗加热器/振荡器*)
+    powder_heater := 0 ;
+    vibrator := 0 ;
 else
     powder_screw_start := auto_control.powder_screw_auto_start;
     stirrer_1 := auto_control.stirrer_1_auto_start ;
     stirrer_2 := auto_control.stirrer_2_auto_start ;
     stirrer_3 := auto_control.stirrer_3_auto_start ;
+    (*料斗加热器/振荡器*)
+    powder_heater := local_control.powder_heater_manual_start;
+    vibrator := local_control.vibrator_manual_start;
 END_IF;
 	
 (*储液槽液位低于开机液位，则开始制备高锰酸钾*)	
@@ -1261,7 +1288,6 @@ powder_motor_auto_control(powder_feeder_capacity := 42.425,
         solution_prepare_flow := local_control.solution_preparing_flow_setting,
         solution_concentration := local_control.solution_concentration,
         powder_motor_frequency_setting =&gt; auto_control.powder_motor_Hz_auto_setting);
-
 </STSource>
 	</program>
 	<FBSource nameOfFBType="powder_screw_auto_control" version="0.02" dateTime="dt#2022-11-04-16:22:35">

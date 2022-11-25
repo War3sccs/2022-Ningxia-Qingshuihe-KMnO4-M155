@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-8-14:31:25" content="功能块源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.196" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-10:49:28" content="功能块源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.219" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<FBSource nameOfFBType="pump_dosing_manual" version="0.02" dateTime="dt#2022-11-08-14:30:46">
 		<attribute name="TypeCodeCheckSumString" value="A872"></attribute>
 		<attribute name="TypeSignatureCheckSumString" value="4E9C"></attribute>
@@ -9,11 +9,14 @@
 			<variables name="start_stop_in" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
 			</variables>
-			<variables name="valve_position" typeName="BOOL">
+			<variables name="low_level_alarm" typeName="BOOL">
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
+			<variables name="pump_maintain" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
 			<variables name="frequency_in" typeName="REAL">
-				<attribute name="PositionPin" value="2"></attribute>
+				<attribute name="PositionPin" value="4"></attribute>
 			</variables>
 		</inputParameters>
 		<outputParameters>
@@ -27,7 +30,15 @@
 		<FBProgram name="pump_manual_control">
 			<STSource>
 (*泵启停*)
-start_stop_out := start_stop_in;
+if low_level_alarm = 1 then
+    start_stop_out := 0 ;
+else
+    if pump_maintain = 1 then
+        start_stop_out := 0 ;
+    else
+        start_stop_out := start_stop_in;
+    END_IF;
+END_IF;
 (*频率设置*)
 frequency_out := frequency_in;
 			
