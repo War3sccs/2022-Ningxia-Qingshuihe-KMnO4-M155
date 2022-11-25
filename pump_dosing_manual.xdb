@@ -16,13 +16,16 @@
 				<attribute name="PositionPin" value="3"></attribute>
 			</variables>
 			<variables name="pump_rinsing" typeName="BOOL">
-				<attribute name="PositionPin" value="3"></attribute>
+				<attribute name="PositionPin" value="4"></attribute>
 			</variables>
 			<variables name="chemical_supply_valve_open" typeName="BOOL">
-				<attribute name="PositionPin" value="3"></attribute>
+				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="source_water_low_flow_alarm" typeName="BOOL">
+				<attribute name="PositionPin" value="6"></attribute>
 			</variables>
 			<variables name="frequency_in" typeName="REAL">
-				<attribute name="PositionPin" value="4"></attribute>
+				<attribute name="PositionPin" value="7"></attribute>
 			</variables>
 		</inputParameters>
 		<outputParameters>
@@ -45,7 +48,19 @@ else
     if pump_maintain = 1 then
         start_stop_out := 0 ;
     else
-        start_stop_out := start_stop_in;
+        if pump_rinsing = 1 then
+            start_stop_out := 0 ;
+        else
+            if chemical_supply_valve_open = 0 then
+                start_stop_out := 0 ;
+            else
+                if source_water_low_flow_alarm = 1 then
+                    start_stop_out := 0 ;
+                else
+                    start_stop_out := start_stop_in;
+                END_IF;
+            END_IF;
+        END_IF;
     END_IF;
 END_IF;
 (*频率设置*)

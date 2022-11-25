@@ -184,6 +184,14 @@ remote_control.rinsing_valve_1_shut := rinsing_valve_1_shut;
 remote_control.rinsing_valve_2_shut := rinsing_valve_2_shut;
 remote_control.rinsing_valve_1_open := rinsing_valve_1_open;
 remote_control.rinsing_valve_2_open := rinsing_valve_2_open;
+local_control.chemical_supply_valve_1_shut := chemical_supply_valve_1_shut;
+local_control.chemical_supply_valve_2_shut := chemical_supply_valve_2_shut;
+local_control.chemical_supply_valve_1_open := chemical_supply_valve_1_open;
+local_control.chemical_supply_valve_2_open := chemical_supply_valve_2_open;
+local_control.rinsing_valve_1_shut := rinsing_valve_1_shut;
+local_control.rinsing_valve_2_shut := rinsing_valve_2_shut;
+local_control.rinsing_valve_1_open := rinsing_valve_1_open;
+local_control.rinsing_valve_2_open := rinsing_valve_2_open;
 
 (*关阀中、开阀中状态判断*)
 remote_control.chemical_supply_valve_1_shutting := local_control.chemical_supply_valve_1_shutting;
