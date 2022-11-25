@@ -12,6 +12,15 @@ local_control.control_switch := control_switch;
 remote_control.emergency_stop := emergency_stop;
 local_control.emergency_stop := emergency_stop;
 
+(*源水流量处理*)
+(*local_control.source_water_flow := remote_control.source_water_flow ;*)
+remote_control.source_water_low_flow_alarm := local_control.source_water_low_flow_alarm ;
+(*按控制方式切换。上位机:1/在地:0*)
+if control_switch = 0 then
+    remote_control.source_water_flow_low_setting := local_control.source_water_flow_low_setting ;
+else
+    local_control.source_water_flow_low_setting := remote_control.source_water_flow_low_setting ;
+end_if;
 
 (*溶药机参数同步*)
 

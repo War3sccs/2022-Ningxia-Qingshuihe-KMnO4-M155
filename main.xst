@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-11:46:19" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.222" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-13:6:37" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.224" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="main" type="section" task="MAST">
 			<comment>主程序</comment>
@@ -14,6 +14,9 @@ water_press_deal();
 
 (* 从电磁流量计读取流量数据 *)
 flow_calculate();
+
+(* 源水流量：流量低会报警 *)
+source_water_flow_alarm();
 
 (*数据同步*)
 data_synchronize();
@@ -424,14 +427,17 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 		<variables name="water_flow_read" typeName="read_flow_meter"></variables>
 		<variables name="KMnO4_flow_read" typeName="read_flow_meter"></variables>
 	</dataBlock>
-	<DDTSource DDTName="system_parameter" version="0.04" dateTime="dt#2022-10-18-11:19:39">
-		<attribute name="TypeSignatureCheckSumString" value="9941"></attribute>
+	<DDTSource DDTName="system_parameter" version="0.05" dateTime="dt#2022-11-25-13:02:06">
+		<attribute name="TypeSignatureCheckSumString" value="58BA"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
 			</variables>
 			<variables name="emergency_stop" typeName="BOOL">
 				<comment>紧急停机 0:停机 1:正常开机</comment>
+			</variables>
+			<variables name="source_water_low_flow_alarm" typeName="BOOL">
+				<comment>源水低流量报警  1:流量过低 0:正常</comment>
 			</variables>
 			<variables name="low_pressure_alarm" typeName="BOOL">
 				<comment>低水压报警</comment>
@@ -719,7 +725,7 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 				<comment>高锰酸钾密度 : Real;   // 单位：g/cm3 </comment>
 			</variables>
 			<variables name="source_water_flow_low_setting" typeName="REAL">
-				<comment> 原水低流量 : Real;   // 单位：m3/h，原水流量低于此值自动停泵 </comment>
+				<comment>源水低流量 : Real;   // 单位：m3/h，原水流量低于此值自动停泵 </comment>
 			</variables>
 			<variables name="water_input_valve_position" typeName="REAL">
 				<comment>"溶药机进水电动阀开度" 0-100% real</comment>
@@ -820,7 +826,7 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<FBSource nameOfFBType="pump_dosing_manual" version="0.02" dateTime="dt#2022-11-08-14:30:46">
+	<FBSource nameOfFBType="pump_dosing_manual" version="0.03" dateTime="dt#2022-11-25-13:02:10">
 		<attribute name="TypeCodeCheckSumString" value="E689"></attribute>
 		<attribute name="TypeSignatureCheckSumString" value="3DF1"></attribute>
 		<inputParameters>
@@ -845,6 +851,9 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 		</outputParameters>
+		<privateLocalVariables>
+			<variables name="low_level_stop" typeName="BOOL"></variables>
+		</privateLocalVariables>
 		<FBProgram name="pump_manual_control">
 			<STSource>
 (*泵启停*)
@@ -1102,6 +1111,15 @@ output_value := REAL_TO_INT((temp_real-input_min) / (input_max-input_min) * (tem
 stirrer_1 := auto_control.stirrer_1_auto_start ;
 stirrer_2 := auto_control.stirrer_2_auto_start ;
 stirrer_3 := auto_control.stirrer_3_auto_start ;
+</STSource>
+	</program>
+	<program>
+		<identProgram name="source_water_flow_alarm" type="SR" task="MAST"></identProgram>
+		<STSource>IF local_control.source_water_flow &lt; local_control.source_water_flow_low_setting THEN
+    local_control.source_water_low_flow_alarm := 1;
+ELSE
+    local_control.source_water_low_flow_alarm := 0;
+END_IF;
 </STSource>
 	</program>
 	<program>

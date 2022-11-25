@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-10:49:28" content="功能块源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.219" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-12:44:11" content="功能块源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.223" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<FBSource nameOfFBType="pump_dosing_manual" version="0.02" dateTime="dt#2022-11-08-14:30:46">
-		<attribute name="TypeCodeCheckSumString" value="A872"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="4E9C"></attribute>
+		<attribute name="TypeCodeCheckSumString" value="E689"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="3DF1"></attribute>
 		<inputParameters>
 			<variables name="start_stop_in" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
@@ -13,6 +13,12 @@
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 			<variables name="pump_maintain" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="pump_rinsing" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="chemical_supply_valve_open" typeName="BOOL">
 				<attribute name="PositionPin" value="3"></attribute>
 			</variables>
 			<variables name="frequency_in" typeName="REAL">
@@ -27,6 +33,9 @@
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 		</outputParameters>
+		<privateLocalVariables>
+			<variables name="low_level_stop" typeName="BOOL"></variables>
+		</privateLocalVariables>
 		<FBProgram name="pump_manual_control">
 			<STSource>
 (*泵启停*)
