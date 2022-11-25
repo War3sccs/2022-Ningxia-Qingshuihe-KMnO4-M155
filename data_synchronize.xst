@@ -110,7 +110,7 @@ else
     local_control.stirrer_3_manual_start := remote_control.stirrer_3_manual_start;
     (*料斗加热器/振荡器*)
     local_control.powder_heater_manual_start := remote_control.powder_heater_manual_start;
-    local_control.powder_heater_manual_start := remote_control.vibrator_manual_start;
+    local_control.vibrator_manual_start := remote_control.vibrator_manual_start;
     (*进水电动阀*)
     local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
     (*溶药机螺杆*)

@@ -24,16 +24,10 @@
 			<variables name="source_water_low_flow_alarm" typeName="BOOL">
 				<attribute name="PositionPin" value="6"></attribute>
 			</variables>
-			<variables name="frequency_in" typeName="REAL">
-				<attribute name="PositionPin" value="7"></attribute>
-			</variables>
 		</inputParameters>
 		<outputParameters>
 			<variables name="start_stop_out" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
-			</variables>
-			<variables name="frequency_out" typeName="REAL">
-				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 		</outputParameters>
 		<privateLocalVariables>
@@ -63,8 +57,6 @@ else
         END_IF;
     END_IF;
 END_IF;
-(*频率设置*)
-frequency_out := frequency_in;
 			
 </STSource>
 		</FBProgram>
