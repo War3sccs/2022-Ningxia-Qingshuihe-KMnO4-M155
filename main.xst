@@ -33,28 +33,30 @@ If emergency_stop = 1 then
     end_if;
     (* 计量泵控制 *)
     (* 计量泵1# *)
+        (*启停控制*)
+    pump_1_manual_control(start_stop_in := local_control.metering_pump_1_manual_start,
+            low_level_alarm := local_control.low_level_alarm,
+            pump_maintain := local_control.pump_1_maintain,
+            pump_rinsing := local_control.pump_rinsing,
+            chemical_supply_valve_open := local_control.chemical_supply_valve_1_open,
+            source_water_low_flow_alarm := local_control.source_water_low_flow_alarm,
+            start_stop_out =&gt; metering_pump_fan_1);
+        (*频率控制*)
     if local_control.pump_1_control_method = 0 then
-        pump_1_manual_control(start_stop_in := local_control.metering_pump_1_manual_start,
-                low_level_alarm := local_control.low_level_alarm,
-                pump_maintain := local_control.pump_1_maintain,
-                pump_rinsing := local_control.pump_rinsing,
-                chemical_supply_valve_open := local_control.chemical_supply_valve_1_open,
-                source_water_low_flow_alarm := local_control.source_water_low_flow_alarm,
-                frequency_in := local_control.metering_pump_1_Hz_manual_setting,
-                start_stop_out =&gt; metering_pump_fan_1,
-                frequency_out =&gt; auto_control.pump_1_motor_Hz_auto_setting);
+            auto_control.pump_1_motor_Hz_auto_setting := local_control.metering_pump_1_Hz_manual_setting;
     end_if;
     (* 计量泵2# *)
+        (*启停控制*)
+    pump_2_manual_control(start_stop_in := local_control.metering_pump_2_manual_start,
+            low_level_alarm := local_control.low_level_alarm,
+            pump_maintain := local_control.pump_2_maintain,
+            pump_rinsing := local_control.pump_rinsing,
+            chemical_supply_valve_open := local_control.chemical_supply_valve_2_open,
+            source_water_low_flow_alarm := local_control.source_water_low_flow_alarm,
+            start_stop_out =&gt; metering_pump_fan_2);
+    (*频率控制*)
     if local_control.pump_2_control_method = 0 then
-        pump_2_manual_control(start_stop_in := local_control.metering_pump_2_manual_start,
-                low_level_alarm := local_control.low_level_alarm,
-                pump_maintain := local_control.pump_2_maintain,
-                pump_rinsing := local_control.pump_rinsing,
-                chemical_supply_valve_open := local_control.chemical_supply_valve_2_open,
-                source_water_low_flow_alarm := local_control.source_water_low_flow_alarm,
-                frequency_in := local_control.metering_pump_2_Hz_manual_setting,
-                start_stop_out =&gt; metering_pump_fan_2,
-                frequency_out =&gt; auto_control.pump_2_motor_Hz_auto_setting);
+            auto_control.pump_2_motor_Hz_auto_setting := local_control.metering_pump_2_Hz_manual_setting;
     end_if;
 else
     emergency_stop_procedure();
