@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-28-16:8:10" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.232" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-14:15:38" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.245" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<program>
 		<identProgram name="dosing_flow_auto_control_pump_1" type="SR" task="MAST"></identProgram>
 		<STSource>(*计量泵投加流量自动控制*)
@@ -20,7 +20,7 @@ pump_1_PID_parameter.mix_par := 1;
 pump_1_PID_parameter.aw_type := 1;
 pump_1_PID_parameter.en_rcpy := 0;
 (*P参数*)
-pump_1_PID_parameter.kp := 0.00001;
+pump_1_PID_parameter.kp := 0.05;
 (*积分作用时间*)
 pump_1_PID_parameter.ti := T#10s;
 (*微分作用时间*)
@@ -40,9 +40,15 @@ pump_1_PID_parameter.out_max := 50.0;
 (*增速限制*)
 pump_1_PID_parameter.outrate := 5.0;
 
+if metering_pump_fan_1 = 1 then
+    auto_control.pump_1_flow_setpoint := local_control.KMnO4_solution_dosing_target ;
+else
+    auto_control.pump_1_flow_setpoint := 0.0;
+    auto_control.pump_1_motor_Hz_auto_setting := 0.0 ;
+END_IF;
 (*PID控制*)
 pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
-        SP := local_control.KMnO4_solution_dosing_target,
+        SP := auto_control.pump_1_flow_setpoint ,
         (*FF := *)
         (*RCPY :=*)
         MAN_AUTO := local_control.pump_1_control_method,
@@ -64,6 +70,11 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="pump_1_PID_parameter" typeName="Para_PIDFF"></variables>
+		<variables name="metering_pump_fan_1" typeName="EBOOL" topologicalAddress="%Q0.2.26">
+			<comment>1#计量泵风扇 1:启动/0:停止</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
 		<variables name="local_control" typeName="system_parameter">
 			<comment>在地控制参数</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-8-13:5:43" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.193" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
-	<DDTSource DDTName="auto_control_parameter" version="0.03" dateTime="dt#2022-11-08-13:05:12">
-		<attribute name="TypeSignatureCheckSumString" value="75BC"></attribute>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-15:11:31" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.251" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<DDTSource DDTName="auto_control_parameter" version="0.04" dateTime="dt#2022-11-29-15:10:31">
+		<attribute name="TypeSignatureCheckSumString" value="62EC"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -64,6 +64,12 @@
 			</variables>
 			<variables name="pump_2_motor_Hz_auto_setting" typeName="REAL">
 				<comment>泵2电机频率Hz</comment>
+			</variables>
+			<variables name="pump_1_flow_setpoint" typeName="REAL">
+				<comment>泵1流量PID setpoint设定值L/h</comment>
+			</variables>
+			<variables name="pump_2_flow_setpoint" typeName="REAL">
+				<comment>泵2流量PID setpoint设定值L/h</comment>
 			</variables>
 			<variables name="water_in_valve_auto_setting" typeName="REAL">
 				<comment>进水阀开度自动控制%</comment>

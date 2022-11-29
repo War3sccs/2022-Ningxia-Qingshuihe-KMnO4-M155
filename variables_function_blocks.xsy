@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-28-15:20:14" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.231" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-15:11:40" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.251" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_in_valve_control_source" typeName="INT" topologicalAddress="%QW0.3.4.0">
 			<comment>溶药机进水电动阀4-20mA原始值-输出</comment>
@@ -63,6 +63,8 @@
 			<comment>溶药机进水电动阀4-20mA原始值-输入</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="pump_1_PIDFF_status" typeName="WORD"></variables>
+		<variables name="pump_2_PIDFF_status" typeName="WORD"></variables>
 		<variables name="stirrer_3" typeName="EBOOL" topologicalAddress="%Q0.2.18">
 			<comment>3#搅拌机启停</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>

@@ -62,6 +62,8 @@ If emergency_stop = 1 then
     (*频率控制*)
     if local_control.pump_2_control_method = 0 then
             auto_control.pump_2_motor_Hz_auto_setting := local_control.metering_pump_2_Hz_manual_setting;
+    else
+	    dosing_flow_auto_control_pump_2();
     end_if;
 else
     emergency_stop_procedure();
