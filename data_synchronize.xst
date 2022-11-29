@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-10-27-13:27:17" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.125" dateTime="date_and_time#2022-10-25-14:0:0"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-28-13:16:31" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.230" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="data_synchronize" type="SR" task="MAST"></identProgram>
 		<STSource>(*参数传递*)
@@ -121,6 +121,16 @@ else
 end_if;
 
 
+(*计量泵自动投加参数同步*)
+(*计算投加量*)
+remote_control.KMnO4_solution_dosing_target := local_control.KMnO4_solution_dosing_target;
+if control_switch = 0 then
+    (*溶液投率*)
+    remote_control.KMnO4_dosing_mg_L := local_control.KMnO4_dosing_mg_L;
+else
+    (*溶液投率*)
+    local_control.KMnO4_dosing_mg_L := remote_control.KMnO4_dosing_mg_L;
+end_if;
 
 (*计量泵状态同步*)
 remote_control.pump_1_status := local_control.pump_1_status;
@@ -202,7 +212,6 @@ remote_control.rinsing_valve_1_shutting := local_control.rinsing_valve_1_shuttin
 remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shutting;
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
-
 </STSource>
 	</program>
 	<dataBlock>
@@ -214,12 +223,16 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<comment>1#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="chemical_supply_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.8">
+			<comment>2#供药电动阀 关到位 1:到位/0:未到位</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
 		<variables name="water_in_valve_position_source" typeName="INT" topologicalAddress="%IW0.3.0.0">
 			<comment>溶药机进水电动阀4-20mA原始值-输入</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="rinsing_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.12">
-			<comment>2#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
+		<variables name="chemical_supply_valve_1_shut" typeName="EBOOL" topologicalAddress="%I0.2.6">
+			<comment>1#供药电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="stirrer_1_status" typeName="EBOOL" topologicalAddress="%I0.2.2">
@@ -230,6 +243,11 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 		<variables name="rinsing_valve_2_open" typeName="EBOOL" topologicalAddress="%I0.2.13">
 			<comment>2#反冲洗电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="powder_level_high_status" typeName="EBOOL" topologicalAddress="%I0.2.14">
+			<comment>料斗物位高 1:过高/0:正常</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="remote_control" typeName="system_parameter">
 			<comment>远程控制参数</comment>
@@ -243,8 +261,8 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
-		<variables name="chemical_supply_valve_1_shut" typeName="EBOOL" topologicalAddress="%I0.2.6">
-			<comment>1#供药电动阀 关到位 1:到位/0:未到位</comment>
+		<variables name="rinsing_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.12">
+			<comment>2#反冲洗电动阀 关到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="emergency_stop" typeName="EBOOL" topologicalAddress="%I0.2.1">
@@ -267,23 +285,27 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			<comment>2#供药电动阀 开到位 1:到位/0:未到位</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="chemical_supply_valve_2_shut" typeName="EBOOL" topologicalAddress="%I0.2.8">
-			<comment>2#供药电动阀 关到位 1:到位/0:未到位</comment>
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
 		<variables name="local_control" typeName="system_parameter">
 			<comment>在地控制参数</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
+		<variables name="powder_level_low_status" typeName="EBOOL" topologicalAddress="%I0.2.15">
+			<comment>料斗物位低 1:过低/0:正常</comment>
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
 	</dataBlock>
-	<DDTSource DDTName="system_parameter" version="0.04" dateTime="dt#2022-10-18-11:19:39">
-		<attribute name="TypeSignatureCheckSumString" value="A95D"></attribute>
+	<DDTSource DDTName="system_parameter" version="0.05" dateTime="dt#2022-11-25-13:02:06">
+		<attribute name="TypeSignatureCheckSumString" value="58BA"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
 			</variables>
 			<variables name="emergency_stop" typeName="BOOL">
 				<comment>紧急停机 0:停机 1:正常开机</comment>
+			</variables>
+			<variables name="source_water_low_flow_alarm" typeName="BOOL">
+				<comment>源水低流量报警  1:流量过低 0:正常</comment>
 			</variables>
 			<variables name="low_pressure_alarm" typeName="BOOL">
 				<comment>低水压报警</comment>
@@ -362,6 +384,15 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 			</variables>
 			<variables name="pump_2_rinsing" typeName="BOOL">
 				<comment>2#计量泵反冲洗</comment>
+			</variables>
+			<variables name="powder_screw_malfunction_reset" typeName="BOOL">
+				<comment>溶药机螺杆故障复位</comment>
+			</variables>
+			<variables name="pump_1_malfunction_reset" typeName="BOOL">
+				<comment>1#计量泵故障复位</comment>
+			</variables>
+			<variables name="pump_2_malfunction_reset" typeName="BOOL">
+				<comment>2#计量泵故障复位</comment>
 			</variables>
 			<variables name="chemical_supply_valve_1_manual" typeName="BOOL">
 				<comment>1#供药电动阀手动控制 1:关闭/0:打开</comment>
@@ -562,7 +593,7 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 				<comment>高锰酸钾密度 : Real;   // 单位：g/cm3 </comment>
 			</variables>
 			<variables name="source_water_flow_low_setting" typeName="REAL">
-				<comment> 原水低流量 : Real;   // 单位：m3/h，原水流量低于此值自动停泵 </comment>
+				<comment>源水低流量 : Real;   // 单位：m3/h，原水流量低于此值自动停泵 </comment>
 			</variables>
 			<variables name="water_input_valve_position" typeName="REAL">
 				<comment>"溶药机进水电动阀开度" 0-100% real</comment>

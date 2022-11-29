@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-25-13:6:37" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.224" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-28-16:8:0" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.232" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<program>
 		<identProgram name="main" type="section" task="MAST">
 			<comment>主程序</comment>
@@ -17,6 +17,9 @@ flow_calculate();
 
 (* 源水流量：流量低会报警 *)
 source_water_flow_alarm();
+
+(*投加流量自动控制*)
+dosing_flow_auto_calculate();
 
 (*数据同步*)
 data_synchronize();
@@ -44,6 +47,8 @@ If emergency_stop = 1 then
         (*频率控制*)
     if local_control.pump_1_control_method = 0 then
             auto_control.pump_1_motor_Hz_auto_setting := local_control.metering_pump_1_Hz_manual_setting;
+    else
+	    dosing_flow_auto_control_pump_1();
     end_if;
     (* 计量泵2# *)
         (*启停控制*)
@@ -61,7 +66,6 @@ If emergency_stop = 1 then
 else
     emergency_stop_procedure();
 end_if;
-
 </STSource>
 	</program>
 	<program>
@@ -74,6 +78,15 @@ local_control.control_switch := control_switch;
 remote_control.emergency_stop := emergency_stop;
 local_control.emergency_stop := emergency_stop;
 
+(*源水流量处理*)
+(*local_control.source_water_flow := remote_control.source_water_flow ;*)
+remote_control.source_water_low_flow_alarm := local_control.source_water_low_flow_alarm ;
+(*按控制方式切换。上位机:1/在地:0*)
+if control_switch = 0 then
+    remote_control.source_water_flow_low_setting := local_control.source_water_flow_low_setting ;
+else
+    local_control.source_water_flow_low_setting := remote_control.source_water_flow_low_setting ;
+end_if;
 
 (*溶药机参数同步*)
 
@@ -163,7 +176,7 @@ else
     local_control.stirrer_3_manual_start := remote_control.stirrer_3_manual_start;
     (*料斗加热器/振荡器*)
     local_control.powder_heater_manual_start := remote_control.powder_heater_manual_start;
-    local_control.powder_heater_manual_start := remote_control.vibrator_manual_start;
+    local_control.vibrator_manual_start := remote_control.vibrator_manual_start;
     (*进水电动阀*)
     local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
     (*溶药机螺杆*)
@@ -174,6 +187,16 @@ else
 end_if;
 
 
+(*计量泵自动投加参数同步*)
+(*计算投加量*)
+remote_control.KMnO4_solution_dosing_target := local_control.KMnO4_solution_dosing_target;
+if control_switch = 0 then
+    (*溶液投率*)
+    remote_control.KMnO4_dosing_mg_L := local_control.KMnO4_dosing_mg_L;
+else
+    (*溶液投率*)
+    local_control.KMnO4_dosing_mg_L := remote_control.KMnO4_dosing_mg_L;
+end_if;
 
 (*计量泵状态同步*)
 remote_control.pump_1_status := local_control.pump_1_status;
@@ -237,6 +260,14 @@ remote_control.rinsing_valve_1_shut := rinsing_valve_1_shut;
 remote_control.rinsing_valve_2_shut := rinsing_valve_2_shut;
 remote_control.rinsing_valve_1_open := rinsing_valve_1_open;
 remote_control.rinsing_valve_2_open := rinsing_valve_2_open;
+local_control.chemical_supply_valve_1_shut := chemical_supply_valve_1_shut;
+local_control.chemical_supply_valve_2_shut := chemical_supply_valve_2_shut;
+local_control.chemical_supply_valve_1_open := chemical_supply_valve_1_open;
+local_control.chemical_supply_valve_2_open := chemical_supply_valve_2_open;
+local_control.rinsing_valve_1_shut := rinsing_valve_1_shut;
+local_control.rinsing_valve_2_shut := rinsing_valve_2_shut;
+local_control.rinsing_valve_1_open := rinsing_valve_1_open;
+local_control.rinsing_valve_2_open := rinsing_valve_2_open;
 
 (*关阀中、开阀中状态判断*)
 remote_control.chemical_supply_valve_1_shutting := local_control.chemical_supply_valve_1_shutting;
@@ -370,6 +401,10 @@ remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 		<variables name="pump_2_manual_control" typeName="pump_dosing_manual"></variables>
 		<variables name="TON_2" typeName="TON"></variables>
 		<variables name="TON_1" typeName="TON"></variables>
+		<variables name="pump_1_PIDFF_status" typeName="WORD"></variables>
+		<variables name="pump_1_PID_info" typeName="Info_PIDFF"></variables>
+		<variables name="pump_1_PID_parameter" typeName="Para_PIDFF"></variables>
+		<variables name="pump_1_control_PIDFF" typeName="PIDFF"></variables>
 		<variables name="PIDFF_info" typeName="Info_PIDFF"></variables>
 		<variables name="water_contro_PIDFF" typeName="PIDFF"></variables>
 		<variables name="PIDFF_parameter" typeName="Para_PIDFF"></variables>
@@ -834,9 +869,9 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<FBSource nameOfFBType="pump_dosing_manual" version="0.03" dateTime="dt#2022-11-25-13:02:10">
-		<attribute name="TypeCodeCheckSumString" value="E689"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="3DF1"></attribute>
+	<FBSource nameOfFBType="pump_dosing_manual" version="0.02" dateTime="dt#2022-11-08-14:30:46">
+		<attribute name="TypeCodeCheckSumString" value="6CBF"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="E238"></attribute>
 		<inputParameters>
 			<variables name="start_stop_in" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
@@ -847,16 +882,19 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 			<variables name="pump_maintain" typeName="BOOL">
 				<attribute name="PositionPin" value="3"></attribute>
 			</variables>
-			<variables name="frequency_in" typeName="REAL">
+			<variables name="pump_rinsing" typeName="BOOL">
 				<attribute name="PositionPin" value="4"></attribute>
+			</variables>
+			<variables name="chemical_supply_valve_open" typeName="BOOL">
+				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="source_water_low_flow_alarm" typeName="BOOL">
+				<attribute name="PositionPin" value="6"></attribute>
 			</variables>
 		</inputParameters>
 		<outputParameters>
 			<variables name="start_stop_out" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
-			</variables>
-			<variables name="frequency_out" typeName="REAL">
-				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 		</outputParameters>
 		<privateLocalVariables>
@@ -871,15 +909,36 @@ else
     if pump_maintain = 1 then
         start_stop_out := 0 ;
     else
-        start_stop_out := start_stop_in;
+        if pump_rinsing = 1 then
+            start_stop_out := 0 ;
+        else
+            if chemical_supply_valve_open = 0 then
+                start_stop_out := 0 ;
+            else
+                if source_water_low_flow_alarm = 1 then
+                    start_stop_out := 0 ;
+                else
+                    start_stop_out := start_stop_in;
+                END_IF;
+            END_IF;
+        END_IF;
     END_IF;
 END_IF;
-(*频率设置*)
-frequency_out := frequency_in;
 			
 </STSource>
 		</FBProgram>
 	</FBSource>
+	<program>
+		<identProgram name="dosing_flow_auto_calculate" type="SR" task="MAST"></identProgram>
+		<STSource>(*投加流量自动计算*)
+(*投加流量*溶液浓度=溶液投率*源水水量*)
+(*投加流量=溶液投率*源水水量/溶液浓度*)
+(*L/h= mg/L * m3/h / %*)
+(*L/h= g/m3 * m3/h / %*)
+(*L/h= kg/m3 * m3/h /1000 / %(kg/L)*)
+local_control.KMnO4_solution_dosing_target := local_control.KMnO4_dosing_mg_L * local_control.source_water_flow / 1000.0 / local_control.solution_concentration;
+</STSource>
+	</program>
 	<program>
 		<identProgram name="solution_prepare_manual" type="SR" task="MAST"></identProgram>
 		<STSource>(*溶液制备*)
@@ -1128,6 +1187,60 @@ stirrer_3 := auto_control.stirrer_3_auto_start ;
 ELSE
     local_control.source_water_low_flow_alarm := 0;
 END_IF;
+</STSource>
+	</program>
+	<program>
+		<identProgram name="dosing_flow_auto_control_pump_1" type="SR" task="MAST"></identProgram>
+		<STSource>(*计量泵投加流量自动控制*)
+
+(*1#计量泵*)
+(*完全PID控制程序*)
+(*PID控制参数*)
+(*流量计测量范围*)
+pump_1_PID_parameter.pv_inf := 0.0;
+pump_1_PID_parameter.pv_sup := 400.0;
+(*计量泵投加范围*)
+pump_1_PID_parameter.out_inf := 0.0;
+pump_1_PID_parameter.out_sup := 50.0;
+pump_1_PID_parameter.rev_dir := 0;
+pump_1_PID_parameter.mix_par := 1;
+pump_1_PID_parameter.aw_type := 1;
+pump_1_PID_parameter.en_rcpy := 0;
+(*P参数*)
+pump_1_PID_parameter.kp := 0.00001;
+(*积分作用时间*)
+pump_1_PID_parameter.ti := T#10s;
+(*微分作用时间*)
+pump_1_PID_parameter.td := T#0s;
+(*微分系数*)
+pump_1_PID_parameter.kd := 1.0;
+pump_1_PID_parameter.pv_dev := 1;
+pump_1_PID_parameter.bump := 0;
+(*死区设置，在死区内的操作*)
+pump_1_PID_parameter.dband := 0.01;
+pump_1_PID_parameter.gain_kp := 0.2;
+pump_1_PID_parameter.ovs_att := 0.0;
+pump_1_PID_parameter.outbias := 0.0;
+(*输出最大最小值 *)
+pump_1_PID_parameter.out_min := 0.0;
+pump_1_PID_parameter.out_max := 50.0;
+(*增速限制*)
+pump_1_PID_parameter.outrate := 5.0;
+
+(*PID控制*)
+pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
+        SP := local_control.KMnO4_solution_dosing_target,
+        (*FF := *)
+        (*RCPY :=*)
+        MAN_AUTO := local_control.pump_1_control_method,
+        PARA := pump_1_PID_parameter,
+        (*TR_I :=*)
+        TR_S := 0,
+        (*OUTD :=*)
+        (*MA_O :=*)
+        INFO =&gt; pump_1_PID_info,
+        STATUS =&gt; pump_1_PIDFF_status,
+        OUT := auto_control.pump_1_motor_Hz_auto_setting);
 </STSource>
 	</program>
 	<program>
