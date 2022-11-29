@@ -212,6 +212,16 @@ remote_control.rinsing_valve_1_shutting := local_control.rinsing_valve_1_shuttin
 remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shutting;
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
+
+(*远程/在地*)
+if control_switch = 0 then
+        (*手动/自动切换*)
+    remote_control.pump_rinsing_control_method = local_control.pump_rinsing_control_method ;
+else
+        (*手动/自动切换*)
+    local_control.pump_rinsing_control_method = remote_control.pump_rinsing_control_method ;
+end_if;
+
 </STSource>
 	</program>
 	<dataBlock>
