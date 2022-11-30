@@ -21,6 +21,9 @@ source_water_flow_alarm();
 (*投加流量自动控制*)
 dosing_flow_auto_calculate();
 
+(*阀门动作状态更新*)
+valve_operation_update();
+
 (*数据同步*)
 data_synchronize();
 
