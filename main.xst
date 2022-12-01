@@ -74,6 +74,8 @@ If emergency_stop = 1 then
     (*电动阀控制*)
     if local_control.pump_rinsing_control_method = 0 then
         valve_control_manual();
+    else
+        metering_pump_auto_rinsing();
     end_if;
 else
     emergency_stop_procedure();

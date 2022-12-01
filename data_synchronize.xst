@@ -176,13 +176,20 @@ end_if;
 if control_switch = 0 then
     remote_control.pump_rinsing_control_method := local_control.pump_rinsing_control_method;
     remote_control.pump_rinsing := local_control.pump_rinsing;
+    (*自动反冲洗*)
     remote_control.pump_1_rinsing := local_control.pump_1_rinsing;
     remote_control.pump_2_rinsing := local_control.pump_2_rinsing;
+    (*手动开关阀*)
+    remote_control.chemical_supply_valve_1_manual := local_control.chemical_supply_valve_1_manual;
+    remote_control.chemical_supply_valve_2_manual := local_control.chemical_supply_valve_2_manual;
 else
     local_control.pump_rinsing_control_method := remote_control.pump_rinsing_control_method;
-    (*local_control.pump_rinsing := remote_control.pump_rinsing;*)
+    (*自动反冲洗*)
     local_control.pump_1_rinsing := remote_control.pump_1_rinsing;
     local_control.pump_2_rinsing := remote_control.pump_2_rinsing;
+    (*手动开关阀*)
+    local_control.chemical_supply_valve_1_manual := remote_control.chemical_supply_valve_1_manual;
+    local_control.chemical_supply_valve_2_manual := remote_control.chemical_supply_valve_2_manual;
 end_if;
 
 (*阀门状态参数同步*)
@@ -212,15 +219,6 @@ remote_control.rinsing_valve_1_shutting := local_control.rinsing_valve_1_shuttin
 remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shutting;
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
-
-(*远程/在地*)
-if control_switch = 0 then
-        (*手动/自动切换*)
-    remote_control.pump_rinsing_control_method = local_control.pump_rinsing_control_method ;
-else
-        (*手动/自动切换*)
-    local_control.pump_rinsing_control_method = remote_control.pump_rinsing_control_method ;
-end_if;
 
 </STSource>
 	</program>

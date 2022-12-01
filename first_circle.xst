@@ -46,6 +46,7 @@
 (*"PLC内部控制".搅拌机运行时间计时到时间复位*)
 auto_control.stirrer_running_time_reset :=1;
 auto_control.stirrer_running_timing := 1;
+
 (*反冲洗设置初始化*)
 auto_control.rinsing_temp_1 := 0;
 auto_control.rinsing_temp_2 := 0;

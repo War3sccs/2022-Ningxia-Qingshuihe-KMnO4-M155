@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-17:19:35" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.255" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-1-14:45:19" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.264" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -281,6 +281,8 @@
 		<variables name="pump_2_control_PIDFF" typeName="PIDFF"></variables>
 		<variables name="pump_1_PIDFF_status" typeName="WORD"></variables>
 		<variables name="pump_2_PIDFF_status" typeName="WORD"></variables>
+		<variables name="pump_rinsing_1" typeName="TON"></variables>
+		<variables name="pump_rinsing_2" typeName="TON"></variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -712,8 +714,8 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<DDTSource DDTName="system_parameter" version="0.05" dateTime="dt#2022-11-25-13:02:06">
-		<attribute name="TypeSignatureCheckSumString" value="58BA"></attribute>
+	<DDTSource DDTName="system_parameter" version="0.06" dateTime="dt#2022-11-29-17:23:58">
+		<attribute name="TypeSignatureCheckSumString" value="F2B9"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
