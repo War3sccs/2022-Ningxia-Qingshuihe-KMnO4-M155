@@ -24,6 +24,9 @@ dosing_flow_auto_calculate();
 (*阀门动作状态更新*)
 valve_operation_update();
 
+(*累积记录更新*)
+accumulate_running_time();
+
 (*数据同步*)
 data_synchronize();
 

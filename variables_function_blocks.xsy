@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-1-14:45:19" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.264" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-2-12:42:5" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.276" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -283,6 +283,14 @@
 		<variables name="pump_2_PIDFF_status" typeName="WORD"></variables>
 		<variables name="pump_rinsing_1" typeName="TON"></variables>
 		<variables name="pump_rinsing_2" typeName="TON"></variables>
+		<variables name="accumulate_pump_1" typeName="TON"></variables>
+		<variables name="accumulate_pump_2" typeName="TON"></variables>
+		<variables name="accumulate_agitator" typeName="TON"></variables>
+		<variables name="accumulate_screw" typeName="TON"></variables>
+		<variables name="stirrer_second" typeName="reset_timer_and_count_second"></variables>
+		<variables name="pump_1_second" typeName="reset_timer_and_count_second"></variables>
+		<variables name="pump_2_second" typeName="reset_timer_and_count_second"></variables>
+		<variables name="screw_second" typeName="reset_timer_and_count_second"></variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -1121,7 +1129,7 @@ END_IF;
 		</FBProgram>
 	</FBSource>
 	<DDTSource DDTName="auto_control_parameter" version="0.05" dateTime="dt#2022-11-29-15:11:56">
-		<attribute name="TypeSignatureCheckSumString" value="08AB"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="3506"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -1158,6 +1166,30 @@ END_IF;
 			</variables>
 			<variables name="stirrer_stop_timing" typeName="BOOL">
 				<comment>"PLC内部控制".搅拌机间歇时间计时分钟计时，到时间</comment>
+			</variables>
+			<variables name="stirrer_timing_reset" typeName="BOOL">
+				<comment>搅拌机计时，复位</comment>
+			</variables>
+			<variables name="stirrer_timing_stop" typeName="BOOL">
+				<comment>搅拌机计时，停止</comment>
+			</variables>
+			<variables name="pump_1_timing_reset" typeName="BOOL">
+				<comment>1#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_1_timing_stop" typeName="BOOL">
+				<comment>1#泵计时，停止</comment>
+			</variables>
+			<variables name="pump_2_timing_reset" typeName="BOOL">
+				<comment>2#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_2_timing_stop" typeName="BOOL">
+				<comment>2#泵计时，停止</comment>
+			</variables>
+			<variables name="screw_timing_reset" typeName="BOOL">
+				<comment>螺旋进料器计时，复位</comment>
+			</variables>
+			<variables name="screw_timing_stop" typeName="BOOL">
+				<comment>螺旋进料器计时，停止</comment>
 			</variables>
 			<variables name="stirrer_status" typeName="BOOL">
 				<comment>PLC内部控制中间参数:搅拌机运行/停止</comment>
@@ -1268,6 +1300,34 @@ END_IF;
 frequency_source_real := DINT_TO_REAL(IN := frequency_source);
 (*每脉冲0.001L，频率为Hz*，流量转换为L/h*)
 flow_output := frequency_source_real * K_factor * 60.0 * 60.0;                
+			
+</STSource>
+		</FBProgram>
+	</FBSource>
+	<FBSource nameOfFBType="reset_timer_and_count_second" version="0.02" dateTime="dt#2022-12-02-12:41:18">
+		<attribute name="TypeCodeCheckSumString" value="D967"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="1A61"></attribute>
+		<inputParameters>
+			<variables name="stirrer_timing_stop" typeName="BOOL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</inputParameters>
+		<inOutParameters>
+			<variables name="second" typeName="INT">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="stirrer_timing_reset" typeName="INT">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+		</inOutParameters>
+		<FBProgram name="counting">
+			<STSource>
+	IF stirrer_timing_stop = 1 THEN
+	    second := second + 1;
+	    stirrer_timing_reset := 0;
+    else
+        stirrer_timing_reset := 1;
+	END_IF;
 			
 </STSource>
 		</FBProgram>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-15:11:31" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.251" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
-	<DDTSource DDTName="auto_control_parameter" version="0.04" dateTime="dt#2022-11-29-15:10:31">
-		<attribute name="TypeSignatureCheckSumString" value="62EC"></attribute>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-1-17:10:19" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.267" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<DDTSource DDTName="auto_control_parameter" version="0.05" dateTime="dt#2022-11-29-15:11:56">
+		<attribute name="TypeSignatureCheckSumString" value="08AB"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -40,6 +40,30 @@
 			</variables>
 			<variables name="stirrer_stop_timing" typeName="BOOL">
 				<comment>"PLC内部控制".搅拌机间歇时间计时分钟计时，到时间</comment>
+			</variables>
+			<variables name="stirrer_timing_reset" typeName="BOOL">
+				<comment>搅拌机计时，复位</comment>
+			</variables>
+			<variables name="stirrer_timing_stop" typeName="BOOL">
+				<comment>搅拌机计时，停止</comment>
+			</variables>
+			<variables name="pump_1_timing_reset" typeName="BOOL">
+				<comment>1#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_1_timing_stop" typeName="BOOL">
+				<comment>1#泵计时，停止</comment>
+			</variables>
+			<variables name="pump_2_timing_reset" typeName="BOOL">
+				<comment>2#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_2_timing_stop" typeName="BOOL">
+				<comment>2#泵计时，停止</comment>
+			</variables>
+			<variables name="screw_timing_reset" typeName="BOOL">
+				<comment>螺旋进料器计时，复位</comment>
+			</variables>
+			<variables name="screw_timing_stop" typeName="BOOL">
+				<comment>螺旋进料器计时，停止</comment>
 			</variables>
 			<variables name="stirrer_status" typeName="BOOL">
 				<comment>PLC内部控制中间参数:搅拌机运行/停止</comment>
