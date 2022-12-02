@@ -220,6 +220,11 @@ remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shuttin
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 
+(*触摸屏数据同步*)
+screw_frequency := local_control.powder_screw_running_Hz;
+pump_1_frequency := local_control.metering_pump_1_running_Hz;
+pump_2_frequency := local_control.metering_pump_2_running_Hz;
+
 </STSource>
 	</program>
 	<dataBlock>
