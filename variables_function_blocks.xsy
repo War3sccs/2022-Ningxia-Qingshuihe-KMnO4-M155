@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-14:46:43" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.289" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-15:44:13" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.295" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -308,6 +308,7 @@
 		<variables name="pump_2_day" typeName="running_time_count_except_second"></variables>
 		<variables name="pump_2_year" typeName="running_time_count_except_second"></variables>
 		<variables name="flow_accumulate" typeName="TON"></variables>
+		<variables name="low_level_pump_stop" typeName="TON"></variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -1213,6 +1214,9 @@ END_IF;
 			</variables>
 			<variables name="stirrer_status" typeName="BOOL">
 				<comment>PLC内部控制中间参数:搅拌机运行/停止</comment>
+			</variables>
+			<variables name="storage_tank_low_level_trigger" typeName="BOOL">
+				<comment>储液池低液位延时动作，辅助用</comment>
 			</variables>
 			<variables name="stirrer_running_time_counting" typeName="TIME">
 				<comment>PLC内部控制中间参数:搅拌机运行计时时间</comment>
