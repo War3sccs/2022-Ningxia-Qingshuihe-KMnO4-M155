@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-17:18:2" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.255" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
-	<DDTSource DDTName="system_parameter" version="0.05" dateTime="dt#2022-11-25-13:02:06">
-		<attribute name="TypeSignatureCheckSumString" value="58BA"></attribute>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-14:41:12" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.289" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<DDTSource DDTName="system_parameter" version="0.06" dateTime="dt#2022-11-29-17:23:58">
+		<attribute name="TypeSignatureCheckSumString" value="F2B9"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
@@ -283,6 +283,9 @@
 			</variables>
 			<variables name="KMnO4_solution_dosing_flow" typeName="REAL">
 				<comment>高锰酸钾计量泵投加流量 L/h</comment>
+			</variables>
+			<variables name="preparing_KMnO4_solution_accumulate" typeName="REAL">
+				<comment>高锰酸钾溶液累计制备量 L</comment>
 			</variables>
 			<variables name="KMnO4_solution_dosing_accumulate" typeName="REAL">
 				<comment>高锰酸钾计量泵累计投加量 L</comment>

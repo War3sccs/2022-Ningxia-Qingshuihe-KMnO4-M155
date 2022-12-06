@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-2-17:58:4" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.288" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-14:46:43" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.289" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -307,10 +307,7 @@
 		<variables name="pump_2_hour" typeName="running_time_count_except_second"></variables>
 		<variables name="pump_2_day" typeName="running_time_count_except_second"></variables>
 		<variables name="pump_2_year" typeName="running_time_count_except_second"></variables>
-		<variables name="frequency_HMI_communicate" typeName="frequency_to_HMI" topologicalAddress="%MW000">
-			<attribute name="IsVariableHMI" value="-1"></attribute>
-		</variables>
-		<variables name="HMI_communicate" typeName="HMI"></variables>
+		<variables name="flow_accumulate" typeName="TON"></variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -743,7 +740,7 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 		</FBProgram>
 	</FBSource>
 	<DDTSource DDTName="system_parameter" version="0.06" dateTime="dt#2022-11-29-17:23:58">
-		<attribute name="TypeSignatureCheckSumString" value="F2B9"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="7BB5"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
@@ -1024,6 +1021,9 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 			<variables name="KMnO4_solution_dosing_flow" typeName="REAL">
 				<comment>高锰酸钾计量泵投加流量 L/h</comment>
 			</variables>
+			<variables name="preparing_KMnO4_solution_accumulate" typeName="REAL">
+				<comment>高锰酸钾溶液累计制备量 L</comment>
+			</variables>
 			<variables name="KMnO4_solution_dosing_accumulate" typeName="REAL">
 				<comment>高锰酸钾计量泵累计投加量 L</comment>
 			</variables>
@@ -1148,7 +1148,7 @@ END_IF;
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<DDTSource DDTName="auto_control_parameter" version="0.05" dateTime="dt#2022-11-29-15:11:56">
+	<DDTSource DDTName="auto_control_parameter" version="0.06" dateTime="dt#2022-12-02-18:01:53">
 		<attribute name="TypeSignatureCheckSumString" value="3506"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
@@ -1250,12 +1250,7 @@ END_IF;
 			<variables name="solution_prepare_flow" typeName="REAL">
 				<comment>溶液制备量L/h</comment>
 			</variables>
-			<variables name="HMI" typeName="frequency_to_HMI"></variables>
 		</structure>
-	</DDTSource>
-	<DDTSource DDTName="frequency_to_HMI" version="0.00" dateTime="dt#2022-12-02-17:37:20">
-		<attribute name="TypeSignatureCheckSumString" value="200E"></attribute>
-		<array>ARRAY[0..2] OF REAL</array>
 	</DDTSource>
 	<FBSource nameOfFBType="powder_screw_auto_control" version="0.02" dateTime="dt#2022-11-04-16:22:35">
 		<attribute name="TypeCodeCheckSumString" value="C170"></attribute>
@@ -1383,10 +1378,4 @@ end_if;
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<DDTSource DDTName="HMI" version="0.00" dateTime="dt#1990-01-01-00:00:00">
-		<attribute name="TypeSignatureCheckSumString" value="F0B8"></attribute>
-		<structure>
-			<variables name="frequency" typeName="frequency_to_HMI"></variables>
-		</structure>
-	</DDTSource>
 </VariablesExchangeFile>

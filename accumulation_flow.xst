@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<STExchangeFile>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-15:4:42" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.293" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<program>
+		<identProgram name="accumulation_flow" type="section" task="FAST"></identProgram>
+		<STSource>
+local_control.KMnO4_solution_dosing_accumulate := local_control.KMnO4_solution_dosing_accumulate + local_control.KMnO4_solution_dosing_flow / 60.0 / 60.0 / 4.0;
+            local_control.preparing_KMnO4_solution_accumulate := local_control.preparing_KMnO4_solution_accumulate + local_control.water_in_flow / 60.0 / 60.0 / 4.0;
+		</STSource>
+	</program>
+</STExchangeFile>
