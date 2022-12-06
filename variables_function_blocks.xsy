@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-2-12:42:5" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.276" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-2-17:58:4" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.288" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -291,6 +291,26 @@
 		<variables name="pump_1_second" typeName="reset_timer_and_count_second"></variables>
 		<variables name="pump_2_second" typeName="reset_timer_and_count_second"></variables>
 		<variables name="screw_second" typeName="reset_timer_and_count_second"></variables>
+		<variables name="stirrer_minute" typeName="running_time_count_except_second"></variables>
+		<variables name="stirrer_hour" typeName="running_time_count_except_second"></variables>
+		<variables name="stirrer_day" typeName="running_time_count_except_second"></variables>
+		<variables name="stirrer_year" typeName="running_time_count_except_second"></variables>
+		<variables name="screw_minute" typeName="running_time_count_except_second"></variables>
+		<variables name="screw_hour" typeName="running_time_count_except_second"></variables>
+		<variables name="screw_day" typeName="running_time_count_except_second"></variables>
+		<variables name="screw_year" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_1_minute" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_1_hour" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_1_day" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_1_year" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_2_minute" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_2_hour" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_2_day" typeName="running_time_count_except_second"></variables>
+		<variables name="pump_2_year" typeName="running_time_count_except_second"></variables>
+		<variables name="frequency_HMI_communicate" typeName="frequency_to_HMI" topologicalAddress="%MW000">
+			<attribute name="IsVariableHMI" value="-1"></attribute>
+		</variables>
+		<variables name="HMI_communicate" typeName="HMI"></variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -1230,7 +1250,12 @@ END_IF;
 			<variables name="solution_prepare_flow" typeName="REAL">
 				<comment>溶液制备量L/h</comment>
 			</variables>
+			<variables name="HMI" typeName="frequency_to_HMI"></variables>
 		</structure>
+	</DDTSource>
+	<DDTSource DDTName="frequency_to_HMI" version="0.00" dateTime="dt#2022-12-02-17:37:20">
+		<attribute name="TypeSignatureCheckSumString" value="200E"></attribute>
+		<array>ARRAY[0..2] OF REAL</array>
 	</DDTSource>
 	<FBSource nameOfFBType="powder_screw_auto_control" version="0.02" dateTime="dt#2022-11-04-16:22:35">
 		<attribute name="TypeCodeCheckSumString" value="C170"></attribute>
@@ -1304,11 +1329,11 @@ flow_output := frequency_source_real * K_factor * 60.0 * 60.0;
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<FBSource nameOfFBType="reset_timer_and_count_second" version="0.02" dateTime="dt#2022-12-02-12:41:18">
-		<attribute name="TypeCodeCheckSumString" value="D967"></attribute>
-		<attribute name="TypeSignatureCheckSumString" value="1A61"></attribute>
+	<FBSource nameOfFBType="reset_timer_and_count_second" version="0.04" dateTime="dt#2022-12-02-13:07:56">
+		<attribute name="TypeCodeCheckSumString" value="7FBD"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="60EF"></attribute>
 		<inputParameters>
-			<variables name="stirrer_timing_stop" typeName="BOOL">
+			<variables name="timing_stop" typeName="BOOL">
 				<attribute name="PositionPin" value="1"></attribute>
 			</variables>
 		</inputParameters>
@@ -1316,20 +1341,52 @@ flow_output := frequency_source_real * K_factor * 60.0 * 60.0;
 			<variables name="second" typeName="INT">
 				<attribute name="PositionPin" value="3"></attribute>
 			</variables>
-			<variables name="stirrer_timing_reset" typeName="INT">
+			<variables name="timing_reset" typeName="BOOL">
 				<attribute name="PositionPin" value="2"></attribute>
 			</variables>
 		</inOutParameters>
 		<FBProgram name="counting">
 			<STSource>
-	IF stirrer_timing_stop = 1 THEN
+	IF timing_stop = 1 THEN
 	    second := second + 1;
-	    stirrer_timing_reset := 0;
+	    timing_reset := 0;
     else
-        stirrer_timing_reset := 1;
+        timing_reset := 1;
 	END_IF;
 			
 </STSource>
 		</FBProgram>
 	</FBSource>
+	<FBSource nameOfFBType="running_time_count_except_second" version="0.03" dateTime="dt#2022-12-02-14:10:46">
+		<attribute name="TypeCodeCheckSumString" value="6775"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="BADB"></attribute>
+		<inputParameters>
+			<variables name="limit" typeName="INT">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</inputParameters>
+		<inOutParameters>
+			<variables name="smaller_unit" typeName="INT">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="bigger_unit" typeName="INT">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+		</inOutParameters>
+		<FBProgram name="compute">
+			<STSource>
+if smaller_unit &gt;= limit then
+    bigger_unit := bigger_unit + 1;
+    smaller_unit := 0;
+end_if;
+			
+</STSource>
+		</FBProgram>
+	</FBSource>
+	<DDTSource DDTName="HMI" version="0.00" dateTime="dt#1990-01-01-00:00:00">
+		<attribute name="TypeSignatureCheckSumString" value="F0B8"></attribute>
+		<structure>
+			<variables name="frequency" typeName="frequency_to_HMI"></variables>
+		</structure>
+	</DDTSource>
 </VariablesExchangeFile>
