@@ -46,11 +46,14 @@ end_if;
 
 (* 低液位报警 *)
 if local_control.liquid_level_KMnO4 &lt;= local_control.liquid_low_setting then
-auto_control.
-local_control.low_level_alarm := 1;
+auto_control.storage_tank_low_level_trigger := 1;
 else
 local_control.low_level_alarm := 0;
 end_if;
+(*低液位报警持续5秒之后，低液位报警才动作*)
+low_level_pump_stop(IN auto_control.storage_tank_low_level_trigger,
+        PT := T#5s,
+        Q =&gt; local_control.low_level_alarm);
 
 (* 停机 *)
 if local_control.liquid_level_KMnO4 &gt;= local_control.stop_setting then
