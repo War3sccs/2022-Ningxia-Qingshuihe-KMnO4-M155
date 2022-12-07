@@ -170,7 +170,11 @@ else
     local_control.metering_pump_2_Hz_manual_setting := remote_control.metering_pump_2_Hz_manual_setting;
 end_if;
 
-(*搅拌机参数同步*)
+(*隔膜破裂报警*)
+local_control.pump_1_membrane_rupture := pump_1_rupture_source;
+local_control.pump_2_membrane_rupture := pump_2_rupture_source;
+remote_control.pump_1_membrane_rupture := pump_1_rupture_source;
+remote_control.pump_2_membrane_rupture := pump_2_rupture_source;
 
 (*反冲洗状态*)
 if control_switch = 0 then
@@ -220,10 +224,6 @@ remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shuttin
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 
-(*触摸屏数据同步*)
-frequency_HMI_communicate[0] := local_control.powder_screw_running_Hz;
-frequency_HMI_communicate[1] := local_control.metering_pump_1_running_Hz;
-frequency_HMI_communicate[2] := local_control.metering_pump_2_running_Hz;
 
 </STSource>
 	</program>

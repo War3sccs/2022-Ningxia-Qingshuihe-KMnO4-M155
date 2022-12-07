@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-6-15:44:13" content="变量源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.295" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-7-13:23:44" content="变量源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.302" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -309,6 +309,15 @@
 		<variables name="pump_2_year" typeName="running_time_count_except_second"></variables>
 		<variables name="flow_accumulate" typeName="TON"></variables>
 		<variables name="low_level_pump_stop" typeName="TON"></variables>
+		<variables name="membrane_rupture_counting_index" typeName="INT"></variables>
+		<variables name="pump_1_rupture_source" typeName="EBOOL" topologicalAddress="%i0.1.2.4">
+			<comment>泵1隔膜破裂报警原始值</comment>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
+		<variables name="pump_2_rupture_source" typeName="EBOOL" topologicalAddress="%i0.1.3.4">
+			<comment>泵2隔膜破裂报警原始值</comment>
+			<attribute name="TimeStampSource" value="0"></attribute>
+		</variables>
 	</dataBlock>
 	<DDTSource DDTName="water_pressure" version="0.01" dateTime="dt#2022-09-23-08:54:16">
 		<attribute name="TypeSignatureCheckSumString" value="A292"></attribute>
@@ -741,7 +750,7 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 		</FBProgram>
 	</FBSource>
 	<DDTSource DDTName="system_parameter" version="0.06" dateTime="dt#2022-11-29-17:23:58">
-		<attribute name="TypeSignatureCheckSumString" value="7BB5"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="8AF0"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
@@ -784,6 +793,12 @@ output_value := (temp_real-temp_min) / (temp_max-temp_min) * (output_max-output_
 			</variables>
 			<variables name="pump_2_maintain" typeName="BOOL">
 				<comment>2#计量泵检修</comment>
+			</variables>
+			<variables name="pump_1_membrane_rupture" typeName="BOOL">
+				<comment>1#计量泵隔膜破裂 0:正常 1:破裂</comment>
+			</variables>
+			<variables name="pump_2_membrane_rupture" typeName="BOOL">
+				<comment>2#计量泵隔膜破裂 0:正常 1:破裂</comment>
 			</variables>
 			<variables name="powder_level_high" typeName="BOOL">
 				<comment>料斗物位高</comment>
@@ -1149,8 +1164,8 @@ END_IF;
 </STSource>
 		</FBProgram>
 	</FBSource>
-	<DDTSource DDTName="auto_control_parameter" version="0.06" dateTime="dt#2022-12-02-18:01:53">
-		<attribute name="TypeSignatureCheckSumString" value="3506"></attribute>
+	<DDTSource DDTName="auto_control_parameter" version="0.07" dateTime="dt#2022-12-06-15:54:19">
+		<attribute name="TypeSignatureCheckSumString" value="7E63"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
