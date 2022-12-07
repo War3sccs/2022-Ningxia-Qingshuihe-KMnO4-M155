@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-1-17:10:19" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.267" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
-	<DDTSource DDTName="auto_control_parameter" version="0.05" dateTime="dt#2022-11-29-15:11:56">
-		<attribute name="TypeSignatureCheckSumString" value="08AB"></attribute>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-7-13:49:52" content="导出的数据类型源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.302" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<DDTSource DDTName="auto_control_parameter" version="0.07" dateTime="dt#2022-12-06-15:54:19">
+		<attribute name="TypeSignatureCheckSumString" value="7E63"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -67,6 +67,9 @@
 			</variables>
 			<variables name="stirrer_status" typeName="BOOL">
 				<comment>PLC内部控制中间参数:搅拌机运行/停止</comment>
+			</variables>
+			<variables name="storage_tank_low_level_trigger" typeName="BOOL">
+				<comment>储液池低液位延时动作，辅助用</comment>
 			</variables>
 			<variables name="stirrer_running_time_counting" typeName="TIME">
 				<comment>PLC内部控制中间参数:搅拌机运行计时时间</comment>
