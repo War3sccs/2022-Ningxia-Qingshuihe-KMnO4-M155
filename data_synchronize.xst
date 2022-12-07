@@ -224,6 +224,22 @@ remote_control.rinsing_valve_2_shutting := local_control.rinsing_valve_2_shuttin
 remote_control.rinsing_valve_1_opening := local_control.rinsing_valve_1_opening;
 remote_control.rinsing_valve_2_opening := local_control.rinsing_valve_2_opening;
 
+(*同步累积量*)
+remote_control.pump_1_accumulate_second := local_control.pump_1_accumulate_second;
+remote_control.pump_1_accumulate_minute := local_control.pump_1_accumulate_minute;
+remote_control.pump_1_accumulate_hour := local_control.pump_1_accumulate_hour;
+remote_control.pump_1_accumulate_day := local_control.pump_1_accumulate_day;
+remote_control.pump_1_accumulate_year := local_control.pump_1_accumulate_year;
+remote_control.pump_2_accumulate_second := local_control.pump_2_accumulate_second;
+remote_control.pump_2_accumulate_minute := local_control.pump_2_accumulate_minute;
+remote_control.pump_2_accumulate_hour := local_control.pump_2_accumulate_hour;
+remote_control.pump_2_accumulate_day := local_control.pump_2_accumulate_day;
+remote_control.pump_2_accumulate_year := local_control.pump_2_accumulate_year;
+remote_control.stirrer_accumulate_second := local_control.stirrer_accumulate_second;
+remote_control.stirrer_accumulate_minute := local_control.stirrer_accumulate_minute;
+remote_control.stirrer_accumulate_hour := local_control.stirrer_accumulate_hour;
+remote_control.stirrer_accumulate_day := local_control.stirrer_accumulate_day;
+remote_control.stirrer_accumulate_year := local_control.stirrer_accumulate_year;
 
 </STSource>
 	</program>
