@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<STExchangeFile>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-8-11:56:50" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.217" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<program>
+		<identProgram name="kmno4_PLC_M340_communication" type="section" task="FAST"></identProgram>
+		<STSource>
+(*转换IP地址*)
+kmno4_PLC_M340_address := ADDM (IN := '0.0.3{192.168.1.150}');
+(* Time out duration setting*)
+kmno4_PLC_M340_read_status[2] := 50;
+(*if it isn't reading busy, then read*)
+if kmno4_PLC_M340_read_status[0].0 = 0
+then
+READ_VAR (ADR := kmno4_PLC_M340_address,
+          OBJ := '%MW',
+          NUM := 0,
+          NB := 110,
+          GEST := kmno4_PLC_M340_read_status,
+          RECP =&gt; %MW0:110);
+(*cancel*)
+(*kmno4_PLC_M340_read_status[0].1 := 1;*)
+end_if;
+		</STSource>
+	</program>
+</STExchangeFile>
