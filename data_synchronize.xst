@@ -163,6 +163,9 @@ if control_switch = 0 then
     (*运行频率手动设置*)
     remote_control.metering_pump_1_Hz_manual_setting := local_control.metering_pump_1_Hz_manual_setting;
     remote_control.metering_pump_2_Hz_manual_setting := local_control.metering_pump_2_Hz_manual_setting;
+    (*计量泵启停*)
+    remote_control.metering_pump_1_manual_start := local_control.metering_pump_1_manual_start;
+    remote_control.metering_pump_2_manual_start := local_control.metering_pump_2_manual_start;
 else
     (*加药泵手/自切换*)
     local_control.pump_1_control_method := remote_control.pump_1_control_method;
@@ -170,6 +173,9 @@ else
     (*运行频率手动设置*)
     local_control.metering_pump_1_Hz_manual_setting := remote_control.metering_pump_1_Hz_manual_setting;
     local_control.metering_pump_2_Hz_manual_setting := remote_control.metering_pump_2_Hz_manual_setting;
+    (*计量泵启停*)
+    local_control.metering_pump_1_manual_start := remote_control.metering_pump_1_manual_start;
+    local_control.metering_pump_2_manual_start := remote_control.metering_pump_2_manual_start;
 end_if;
 
 (*隔膜破裂报警*)
