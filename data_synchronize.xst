@@ -93,6 +93,7 @@ if control_switch = 0 then
     remote_control.waterin_valve_manual_setting := local_control.waterin_valve_manual_setting;
     (*溶药机螺杆*)
     remote_control.powder_screw_motor_Hz_manual := local_control.powder_screw_motor_Hz_manual;
+    remote_control.powder_screw_manual_start := local_control.powder_screw_manual_start;
     (*溶液制备设定*)
     remote_control.solution_preparing_flow_setting := local_control.solution_preparing_flow_setting;
     remote_control.solution_concentration := local_control.solution_concentration;
@@ -115,6 +116,7 @@ else
     local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
     (*溶药机螺杆*)
     local_control.powder_screw_motor_Hz_manual := remote_control.powder_screw_motor_Hz_manual;
+    local_control.powder_screw_manual_start := remote_control.powder_screw_manual_start;
     (*溶液制备设定*)
     local_control.solution_preparing_flow_setting := remote_control.solution_preparing_flow_setting;
     local_control.solution_concentration := remote_control.solution_concentration;
