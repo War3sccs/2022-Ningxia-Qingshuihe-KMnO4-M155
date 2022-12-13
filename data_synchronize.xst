@@ -86,7 +86,7 @@ if control_switch = 0 then
     remote_control.stirrer_1_manual_start := local_control.stirrer_1_manual_start;
     remote_control.stirrer_2_manual_start := local_control.stirrer_2_manual_start;
     remote_control.stirrer_3_manual_start := local_control.stirrer_3_manual_start;
-    (*料斗加热器/振荡器*)
+    (*料斗加热器/振荡器只能在地启动*)
     remote_control.powder_heater_manual_start := local_control.powder_heater_manual_start;
     remote_control.vibrator_manual_start := local_control.vibrator_manual_start;
     (*进水电动阀*)
@@ -109,9 +109,9 @@ else
     local_control.stirrer_1_manual_start := remote_control.stirrer_1_manual_start;
     local_control.stirrer_2_manual_start := remote_control.stirrer_2_manual_start;
     local_control.stirrer_3_manual_start := remote_control.stirrer_3_manual_start;
-    (*料斗加热器/振荡器*)
-    local_control.powder_heater_manual_start := remote_control.powder_heater_manual_start;
-    local_control.vibrator_manual_start := remote_control.vibrator_manual_start;
+    (*料斗加热器/振荡器只能在地启动*)
+    (*local_control.powder_heater_manual_start := remote_control.powder_heater_manual_start;*)
+    (*local_control.vibrator_manual_start := remote_control.vibrator_manual_start;*)
     (*进水电动阀*)
     local_control.waterin_valve_manual_setting := remote_control.waterin_valve_manual_setting;
     (*溶药机螺杆*)
