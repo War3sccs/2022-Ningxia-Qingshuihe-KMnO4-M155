@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <STExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-11-29-14:15:38" content="结构化的源文件" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.245" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-13-17:40:51" content="结构化的源文件" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.314" dateTime="date_and_time#2022-11-28-16:15:20"></contentHeader>
 	<program>
 		<identProgram name="dosing_flow_auto_control_pump_1" type="SR" task="MAST"></identProgram>
 		<STSource>(*计量泵投加流量自动控制*)
@@ -35,7 +35,7 @@ pump_1_PID_parameter.gain_kp := 0.2;
 pump_1_PID_parameter.ovs_att := 0.0;
 pump_1_PID_parameter.outbias := 0.0;
 (*输出最大最小值 *)
-pump_1_PID_parameter.out_min := 0.0;
+pump_1_PID_parameter.out_min := 5.0;
 pump_1_PID_parameter.out_max := 50.0;
 (*增速限制*)
 pump_1_PID_parameter.outrate := 5.0;
@@ -48,7 +48,7 @@ else
 END_IF;
 (*PID控制*)
 pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
-        SP := auto_control.pump_1_flow_setpoint ,
+        SP := auto_control.pump_1_flow_setpoint,
         (*FF := *)
         (*RCPY :=*)
         MAN_AUTO := local_control.pump_1_control_method,
@@ -65,15 +65,14 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 	<dataBlock>
 		<variables name="pump_1_PIDFF_status" typeName="WORD"></variables>
 		<variables name="pump_1_PID_info" typeName="Info_PIDFF"></variables>
+		<variables name="pump_1_PID_parameter" typeName="Para_PIDFF"></variables>
 		<variables name="auto_control" typeName="auto_control_parameter">
 			<comment>自动控制变量</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="pump_1_PID_parameter" typeName="Para_PIDFF"></variables>
 		<variables name="metering_pump_fan_1" typeName="EBOOL" topologicalAddress="%Q0.2.26">
 			<comment>1#计量泵风扇 1:启动/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
-			<attribute name="TimeStampSource" value="0"></attribute>
 		</variables>
 		<variables name="local_control" typeName="system_parameter">
 			<comment>在地控制参数</comment>
@@ -81,8 +80,8 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 		</variables>
 		<variables name="pump_1_control_PIDFF" typeName="PIDFF"></variables>
 	</dataBlock>
-	<DDTSource DDTName="auto_control_parameter" version="0.03" dateTime="dt#2022-11-08-13:05:12">
-		<attribute name="TypeSignatureCheckSumString" value="75BC"></attribute>
+	<DDTSource DDTName="auto_control_parameter" version="0.07" dateTime="dt#2022-12-06-15:54:19">
+		<attribute name="TypeSignatureCheckSumString" value="7E63"></attribute>
 		<structure>
 			<variables name="powder_screw_auto_start" typeName="BOOL">
 				<comment>"溶药机螺杆自动控制下启停"</comment>
@@ -120,8 +119,35 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			<variables name="stirrer_stop_timing" typeName="BOOL">
 				<comment>"PLC内部控制".搅拌机间歇时间计时分钟计时，到时间</comment>
 			</variables>
+			<variables name="stirrer_timing_reset" typeName="BOOL">
+				<comment>搅拌机计时，复位</comment>
+			</variables>
+			<variables name="stirrer_timing_stop" typeName="BOOL">
+				<comment>搅拌机计时，停止</comment>
+			</variables>
+			<variables name="pump_1_timing_reset" typeName="BOOL">
+				<comment>1#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_1_timing_stop" typeName="BOOL">
+				<comment>1#泵计时，停止</comment>
+			</variables>
+			<variables name="pump_2_timing_reset" typeName="BOOL">
+				<comment>2#泵计时，复位</comment>
+			</variables>
+			<variables name="pump_2_timing_stop" typeName="BOOL">
+				<comment>2#泵计时，停止</comment>
+			</variables>
+			<variables name="screw_timing_reset" typeName="BOOL">
+				<comment>螺旋进料器计时，复位</comment>
+			</variables>
+			<variables name="screw_timing_stop" typeName="BOOL">
+				<comment>螺旋进料器计时，停止</comment>
+			</variables>
 			<variables name="stirrer_status" typeName="BOOL">
 				<comment>PLC内部控制中间参数:搅拌机运行/停止</comment>
+			</variables>
+			<variables name="storage_tank_low_level_trigger" typeName="BOOL">
+				<comment>储液池低液位延时动作，辅助用</comment>
 			</variables>
 			<variables name="stirrer_running_time_counting" typeName="TIME">
 				<comment>PLC内部控制中间参数:搅拌机运行计时时间</comment>
@@ -144,6 +170,12 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			<variables name="pump_2_motor_Hz_auto_setting" typeName="REAL">
 				<comment>泵2电机频率Hz</comment>
 			</variables>
+			<variables name="pump_1_flow_setpoint" typeName="REAL">
+				<comment>泵1流量PID setpoint设定值L/h</comment>
+			</variables>
+			<variables name="pump_2_flow_setpoint" typeName="REAL">
+				<comment>泵2流量PID setpoint设定值L/h</comment>
+			</variables>
 			<variables name="water_in_valve_auto_setting" typeName="REAL">
 				<comment>进水阀开度自动控制%</comment>
 			</variables>
@@ -155,8 +187,8 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			</variables>
 		</structure>
 	</DDTSource>
-	<DDTSource DDTName="system_parameter" version="0.05" dateTime="dt#2022-11-25-13:02:06">
-		<attribute name="TypeSignatureCheckSumString" value="58BA"></attribute>
+	<DDTSource DDTName="system_parameter" version="0.06" dateTime="dt#2022-11-29-17:23:58">
+		<attribute name="TypeSignatureCheckSumString" value="8AF0"></attribute>
 		<structure>
 			<variables name="control_switch" typeName="BOOL">
 				<comment>控制选择:远程/在地 0:在地 1:远程</comment>
@@ -199,6 +231,12 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			</variables>
 			<variables name="pump_2_maintain" typeName="BOOL">
 				<comment>2#计量泵检修</comment>
+			</variables>
+			<variables name="pump_1_membrane_rupture" typeName="BOOL">
+				<comment>1#计量泵隔膜破裂 0:正常 1:破裂</comment>
+			</variables>
+			<variables name="pump_2_membrane_rupture" typeName="BOOL">
+				<comment>2#计量泵隔膜破裂 0:正常 1:破裂</comment>
 			</variables>
 			<variables name="powder_level_high" typeName="BOOL">
 				<comment>料斗物位高</comment>
@@ -260,10 +298,10 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			<variables name="chemical_supply_valve_2_manual" typeName="BOOL">
 				<comment>2#供药电动阀手动控制 1:关闭/0:打开</comment>
 			</variables>
-			<variables name="rinsing_valve_valve_1_manual" typeName="BOOL">
+			<variables name="rinsing_valve_1_manual" typeName="BOOL">
 				<comment>1#反冲洗电动阀手动控制 1:打开/0:关闭</comment>
 			</variables>
-			<variables name="rinsing_valve_valve_2_manual" typeName="BOOL">
+			<variables name="rinsing_valve_2_manual" typeName="BOOL">
 				<comment>2#反冲洗电动阀手动控制 1:打开/0:关闭</comment>
 			</variables>
 			<variables name="chemical_supply_valve_1_shut" typeName="BOOL">
@@ -436,6 +474,9 @@ pump_1_control_PIDFF(PV := local_control.KMnO4_solution_dosing_flow,
 			</variables>
 			<variables name="KMnO4_solution_dosing_flow" typeName="REAL">
 				<comment>高锰酸钾计量泵投加流量 L/h</comment>
+			</variables>
+			<variables name="preparing_KMnO4_solution_accumulate" typeName="REAL">
+				<comment>高锰酸钾溶液累计制备量 L</comment>
 			</variables>
 			<variables name="KMnO4_solution_dosing_accumulate" typeName="REAL">
 				<comment>高锰酸钾计量泵累计投加量 L</comment>
