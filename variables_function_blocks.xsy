@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <VariablesExchangeFile>
-	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-15-14:51:17" content="Variable source file" DTDVersion="41"></fileHeader>
-	<contentHeader name="项目" version="0.0.241" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
+	<fileHeader company="Schneider Automation" product="Unity Pro XL V13.1 - 180823C" dateTime="date_and_time#2022-12-21-13:47:49" content="Variable source file" DTDVersion="41"></fileHeader>
+	<contentHeader name="项目" version="0.0.245" dateTime="date_and_time#2022-10-28-16:21:14"></contentHeader>
 	<dataBlock>
 		<variables name="water_pressure_data" typeName="water_pressure">
 			<comment>进水压力</comment>
@@ -17,12 +17,12 @@
 			<comment>溶药机螺杆风扇 1:启动/0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="membrane_rupture_pump_1" typeName="EBOOL" topologicalAddress="%Q0.2.28">
-			<comment>1#计量泵隔膜破裂报警 1:破裂/0:正常</comment>
+		<variables name="running_pump_1" typeName="EBOOL" topologicalAddress="%Q0.2.28">
+			<comment>1#计量泵运行/停止 1:运行0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
-		<variables name="membrane_rupture_pump_2" typeName="EBOOL" topologicalAddress="%Q0.2.29">
-			<comment>2#计量泵隔膜破裂报警 1:破裂/0:正常</comment>
+		<variables name="running_pump_2" typeName="EBOOL" topologicalAddress="%Q0.2.29">
+			<comment>2#计量泵运行/停止 1:运行0:停止</comment>
 			<attribute name="IsVariableHMI" value="-1"></attribute>
 		</variables>
 		<variables name="waterin_valve_setting" typeName="REAL">
